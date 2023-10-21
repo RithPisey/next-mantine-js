@@ -1,34 +1,10 @@
 "use client";
-import { useDisclosure, useHeadroom } from "@mantine/hooks";
-import {
-  ActionIcon,
-  AppShell,
-  Avatar,
-  Burger,
-  Group,
-  Menu,
-  NavLink,
-  ScrollArea,
-  Skeleton,
-  Stack,
-  Text,
-} from "@mantine/core";
-import {
-  IconBellFilled,
-  IconGauge,
-  IconLanguage,
-  IconLogout,
-  IconMenu,
-  IconMenu2,
-  IconNotification,
-  IconNotificationOff,
-  IconSettings,
-  IconUser,
-} from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import { AppShell } from "@mantine/core";
 import { Navbar } from "./Navbar";
 import NavHeader from "./NavHeader";
 
-export function MainLayout({ children }) {
+export function AdminLayout({ children, lang }) {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   return (
@@ -42,9 +18,13 @@ export function MainLayout({ children }) {
       padding="md"
       withBorder={true}
     >
-      <NavHeader toggleDesktop={toggleDesktop} toggleMobile={toggleMobile} />
+      <NavHeader
+        lang={lang}
+        toggleDesktop={toggleDesktop}
+        toggleMobile={toggleMobile}
+      />
       <Navbar mobileOpened={mobileOpened} desktopOpened={desktopOpened} />
-      <AppShell.Main maw={"85%"} mx={"auto"}>
+      <AppShell.Main maw={"90%"} mx={"auto"}>
         {children}
       </AppShell.Main>
     </AppShell>

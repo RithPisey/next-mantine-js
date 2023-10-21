@@ -62,6 +62,7 @@ const RenderNavigation = function ({ paths }) {
             return item.link === pathName;
           }
         })}
+        mb={12}
       >
         {value.child.map((first_child, index) => {
           return first_child.isGroup ? (
@@ -117,6 +118,7 @@ const RenderNavigation = function ({ paths }) {
         childrenOffset={childOffset}
         component={Link}
         href={value.link}
+        mb={12}
       />
     );
   });

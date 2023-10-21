@@ -1,4 +1,4 @@
-"use client";
+import { i18n } from "@/i18n.config";
 import {
   ActionIcon,
   AppShell,
@@ -16,9 +16,17 @@ import {
   IconMoon,
   IconSun,
 } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 export default function NavHeader({ toggleDesktop, toggleMobile }) {
   const { setColorScheme, clearColorScheme, colorScheme } =
     useMantineColorScheme();
+  const pathName = usePathname();
+  const redirectedPathName = (locale) => {
+    if (!pathName) return "/";
+    const segments = pathName.split("/");
+    segments[1] = locale;
+    return segments.join("/");
+  };
   return (
     <AppShell.Header
       withBorder={false}
@@ -48,12 +56,24 @@ export default function NavHeader({ toggleDesktop, toggleMobile }) {
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item>
-                <span class="flag flag-country-kh"></span> Khmer
-              </Menu.Item>
-              <Menu.Item>
-                <span class="flag flag-country-us"></span> English
-              </Menu.Item>
+              {i18n.locales.map((locale) => {
+                return (
+                  <Menu.Item
+                    component="a"
+                    key={Date.now() + locale}
+                    href={redirectedPathName(locale)}
+                  >
+                    <span
+                      class={
+                        locale === "kh"
+                          ? "flag flag-country-kh"
+                          : "flag flag-country-us"
+                      }
+                    ></span>{" "}
+                    {locale === "kh" ? "Khmer" : "English"}
+                  </Menu.Item>
+                );
+              })}
             </Menu.Dropdown>
           </Menu>
 

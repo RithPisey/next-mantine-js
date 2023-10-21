@@ -1,7 +1,8 @@
 import "@/assets/css/globals.css";
 import "@mantine/core/styles.css";
-import { MainLayout } from "@/components/layout";
+import { AdminLayout } from "@/components/layout/AdminLayout";
 import { LoadingOverlay, MantineProvider, Stack } from "@mantine/core";
+import { i18n } from "@/i18n.config";
 import { theme } from "@/config/themes";
 import { ClientRenderWrapper } from "@/components/ClientRenderWrapper";
 import PagloadLoading from "@/components/Loading/PagloadLoading";
@@ -12,9 +13,13 @@ export const metadata = {
   link: [""],
 };
 
-export default function RootLayout({ children }) {
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
+export default function RootLayout({ children, params }) {
   return (
-    <html lang="en">
+    <html lang={params.lang}>
       <head>
         <link
           rel="stylesheet"
@@ -25,7 +30,7 @@ export default function RootLayout({ children }) {
         <MantineProvider theme={theme} defaultColorScheme="auto">
           <ClientRenderWrapper>
             <PagloadLoading>
-              <MainLayout>{children}</MainLayout>
+              <AdminLayout lang={params.lang}>{children}</AdminLayout>
             </PagloadLoading>
           </ClientRenderWrapper>
         </MantineProvider>

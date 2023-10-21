@@ -2,7 +2,7 @@
 import { Button, Input, Loader, createTheme, rem } from "@mantine/core";
 
 export const theme = createTheme({
-  scale: 1,
+  scale: 0.9,
   primaryColor: "primary",
   colors: {
     error: [

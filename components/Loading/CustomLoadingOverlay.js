@@ -5,7 +5,7 @@ export default function CustomLoadingOverlay({ children }) {
     <Box
       style={{
         background: "white",
-        zIndex: 1000,
+        zIndex: 2000,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
