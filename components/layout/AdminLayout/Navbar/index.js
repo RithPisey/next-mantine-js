@@ -23,6 +23,7 @@ export function Navbar({ mobileOpend, desktopOpened }) {
       style={{
         boxShadow: desktopOpened ? "-16px 30px 20px 1px black" : "none",
       }}
+      withBorder={false}
     >
       <AppShell.Section grow component={ScrollArea}>
         <RenderNavigation paths={paths} />
@@ -44,12 +45,14 @@ export function Navbar({ mobileOpend, desktopOpened }) {
 const RenderNavigation = function ({ paths }) {
   const childOffset = 25;
   const pathName = usePathname();
+  const iconVariant = "transparent";
+  const iconColor = "gray";
   return paths.map((value, index) => {
     return value.isGroup ? (
       <NavLink
         key={Date.now() + index}
         leftSection={
-          <ActionIcon color="secondary">
+          <ActionIcon variant={iconVariant} color={iconColor}>
             <value.icon />
           </ActionIcon>
         }
@@ -62,7 +65,6 @@ const RenderNavigation = function ({ paths }) {
             return item.link === pathName;
           }
         })}
-        mb={12}
       >
         {value.child.map((first_child, index) => {
           return first_child.isGroup ? (
@@ -109,7 +111,7 @@ const RenderNavigation = function ({ paths }) {
         active={pathName === value.link ? true : false}
         key={Date.now() + index}
         leftSection={
-          <ActionIcon color="secondary">
+          <ActionIcon variant={iconVariant} color={iconColor}>
             <value.icon />
           </ActionIcon>
         }
@@ -118,7 +120,6 @@ const RenderNavigation = function ({ paths }) {
         childrenOffset={childOffset}
         component={Link}
         href={value.link}
-        mb={12}
       />
     );
   });

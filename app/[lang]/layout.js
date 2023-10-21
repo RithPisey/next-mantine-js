@@ -1,7 +1,7 @@
 import "@/assets/css/globals.css";
 import "@mantine/core/styles.css";
 import { AdminLayout } from "@/components/layout/AdminLayout";
-import { LoadingOverlay, MantineProvider, Stack } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { i18n } from "@/i18n.config";
 import { theme } from "@/config/themes";
 import { ClientRenderWrapper } from "@/components/ClientRenderWrapper";

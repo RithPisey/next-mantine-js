@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@casl/ability": "^6.5.0",
+    "@casl/react": "^3.1.0",
     "@formatjs/intl-localematcher": "^0.4.2",
     "@mantine/carousel": "^7.1.2",
     "@mantine/code-highlight": "^7.1.2",
