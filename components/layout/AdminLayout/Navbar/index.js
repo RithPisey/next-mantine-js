@@ -18,8 +18,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Can, ability, field, subject } from "@/config/Abilities";
 
 const linkLeftBorderStyle = {
-	borderLeft: "1px solid",
-	borderLeftColor: "gainsboro",
+	// borderLeft: "1px solid",
+	// borderLeftColor: "gainsboro",
 };
 
 export function Navbar({ mobileOpend, desktopOpened, lang }) {

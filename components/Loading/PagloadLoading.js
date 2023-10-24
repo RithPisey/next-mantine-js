@@ -6,25 +6,25 @@ import { ClockLoader, PropagateLoader, PulseLoader } from "react-spinners";
 import CustomLoadingOverlay from "./CustomLoadingOverlay";
 
 export default function PagloadLoading({ children }) {
-  const [isLoad, setIsLoad] = useState(true);
-  const theme = useMantineTheme();
-  useEffect(() => {
-    return () => {
-      setIsLoad(false);
-    };
-  });
-  return (
-    <>
-      {isLoad && (
-        <CustomLoadingOverlay>
-          {" "}
-          <Stack justify="center" align="center">
-            <ClockLoader loading={true} color={theme.colors.secondary[5]} />
-            <PulseLoader loading={true} color={theme.colors.secondary[5]} />
-          </Stack>
-        </CustomLoadingOverlay>
-      )}
-      {children}
-    </>
-  );
+	const [isLoad, setIsLoad] = useState(true);
+	const theme = useMantineTheme();
+	useEffect(() => {
+		return () => {
+			setIsLoad(false);
+		};
+	});
+	return (
+		<>
+			{isLoad && (
+				<CustomLoadingOverlay>
+					{" "}
+					<Stack justify='center' align='center'>
+						<ClockLoader loading={true} color={theme.colors.secondary[5]} />
+						<PulseLoader loading={true} color={theme.colors.secondary[5]} />
+					</Stack>
+				</CustomLoadingOverlay>
+			)}
+			{children}
+		</>
+	);
 }

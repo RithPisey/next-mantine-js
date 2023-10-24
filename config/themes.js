@@ -78,6 +78,7 @@ export const theme = createTheme({
 			"#004dab",
 		],
 	},
+
 	components: {
 		Button: Button.extend({
 			defaultProps: {

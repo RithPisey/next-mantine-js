@@ -1,11 +1,14 @@
 import "@/assets/css/globals.css";
 import "@mantine/core/styles.css";
-import { AdminLayout } from "@/components/layout/AdminLayout";
-import { MantineProvider } from "@mantine/core";
+
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { i18n } from "@/i18n.config";
-import { theme } from "@/config/themes";
 import PagloadLoading from "@/components/Loading/PagloadLoading";
 import { AbilityContextWrapper } from "@/components/AbilityContextWrapper";
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import MantineDefaultWrapper from "@/components/MantineDefaultWrapper";
+import { theme } from "@/config/themes";
+import MainLayout from "@/components/MainLayout";
 
 export const metadata = {
 	title: "Next Mantine",
@@ -21,16 +24,17 @@ export default function RootLayout({ children, params }) {
 	return (
 		<html lang={params.lang}>
 			<head>
+				<ColorSchemeScript />
 				<link
 					rel='stylesheet'
 					href='https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler-flags.min.css'
 				/>
 			</head>
 			<body>
-				<MantineProvider theme={theme} defaultColorScheme='auto'>
+				<MantineProvider theme={theme}>
 					<PagloadLoading>
 						<AbilityContextWrapper>
-							<AdminLayout lang={params.lang}>{children}</AdminLayout>
+							<MainLayout lang={params.lang}>{children}</MainLayout>
 						</AbilityContextWrapper>
 					</PagloadLoading>
 				</MantineProvider>
