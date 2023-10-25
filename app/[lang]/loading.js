@@ -13,6 +13,7 @@ export default function Loading() {
   const theme = useMantineTheme();
   return (
     <Stack>
+      <Skeleton visible={true} height={"60px"}></Skeleton>
       <Skeleton visible={true} height={"100px"}></Skeleton>
       <Skeleton visible={true} height={"500px"}></Skeleton>
     </Stack>
