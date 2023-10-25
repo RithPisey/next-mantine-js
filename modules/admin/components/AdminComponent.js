@@ -69,10 +69,12 @@ export default function AdminComponent() {
       <ICommonDataTable columns={columns}>
         <ICommonDataTable.Header enableActionAdd={true} title={"Page Admin"} />
         <ICommonDataTable.Filters enableActionExport={true}>
-          <ICommonDataTable.Filters.FilterInput>
+          <ICommonDataTable.Filters.FilterModalInput>
             <TextInput key="filter_name" label="Name" placeholder="Name" />
             <TextInput key="filter_phone" label="Phone" placeholder="Phone" />
-          </ICommonDataTable.Filters.FilterInput>
+            <TextInput key="filter_phone" label="Phone" placeholder="Phone" />
+            <TextInput key="filter_phone" label="Phone" placeholder="Phone" />
+          </ICommonDataTable.Filters.FilterModalInput>
         </ICommonDataTable.Filters>
         <ICommonDataTable.DataTable />
       </ICommonDataTable>
@@ -391,7 +393,9 @@ ICommonDataTable.Filters = function Filters({
     </Paper>
   );
 };
-ICommonDataTable.Filters.FilterInput = function FilterInput({ children }) {
+ICommonDataTable.Filters.FilterModalInput = function FilterModalInput({
+  children,
+}) {
   return children;
 };
 
