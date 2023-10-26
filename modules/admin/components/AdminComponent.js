@@ -37,7 +37,6 @@ export default function AdminComponent() {
 		<Box>
 			<ICommonDataTable title={"Page Admin"}>
 				<ICommonDataTable.Header />
-
 				<ICommonDataTable.Filters>
 					<ICommonDataTable.Filters.FilterModal>
 						<Box>
