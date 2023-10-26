@@ -1,5 +1,6 @@
 import "@/assets/css/globals.css";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { i18n } from "@/i18n.config";

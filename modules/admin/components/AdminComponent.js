@@ -13,36 +13,148 @@ import {
 	Space,
 	Table,
 	Text,
+	TextInput,
 	Title,
 	useCombobox,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import {
+	IconEdit,
 	IconEye,
+	IconEyeClosed,
+	IconEyeOff,
 	IconFileExport,
 	IconFilter,
 	IconPlus,
 	IconRefresh,
 	IconSearch,
 	IconSelector,
+	IconSettings,
 	IconSortAscending,
 	IconSortDescending,
 	IconTableExport,
+	IconTool,
+	IconTools,
+	IconTrash,
 	IconUpload,
 } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
+import { v4 } from "uuid";
 
 export default function AdminComponent() {
+	const columns = [
+		{
+			field: "actions",
+			header: "Actions",
+			type: "actions",
+			getAction: (params) => {
+				return [
+					<ICommonDataTable.ActionsMenuItem
+						icon={<IconTrash />}
+						label={"Delete"}
+						onActionClick={(params) => {
+							console.log(params);
+						}}
+					/>,
+					<ICommonDataTable.ActionsMenuItem
+						icon={<IconEdit />}
+						label={"Edit"}
+						onActionClick={(params) => {
+							console.log(params);
+						}}
+					/>,
+				];
+			},
+		},
+		{
+			field: "name",
+			header: "Name",
+			hideable: false,
+		},
+		{
+			field: "latin_name",
+			header: "Latin Name",
+			hideable: false,
+		},
+		{
+			field: "phone",
+			header: "Phone",
+			hideable: true,
+		},
+		{
+			field: "alt_phone",
+			header: "Alternative Phone",
+			hideable: true,
+		},
+		{
+			field: "address",
+			header: "Address",
+			hideable: true,
+		},
+	];
+
+	const rows = [
+		{
+			id: 1,
+			name: "John",
+			latin_name: "John",
+			phone: "123989121",
+			alt_phone: "012334556",
+			address: "home test",
+		},
+		{
+			id: 2,
+			name: "Mike",
+			latin_name: "Mike",
+			phone: "123989121",
+			alt_phone: "012334556",
+			address: "elephant test",
+		},
+	];
+
+	const handleActionAdd = function () {};
+
+	const handleActionRefresh = function () {};
+
 	return (
 		<Box>
-			<ICommonDataTable title={"Page Admin"}>
-				<ICommonDataTable.Header />
-				<ICommonDataTable.Filters>
-					<ICommonDataTable.Filters.FilterModal>
-						<Box>
-							<Input />
-						</Box>
-					</ICommonDataTable.Filters.FilterModal>
+			<DatePickerInput
+				label='Pick date'
+				placeholder='Pick date'
+				onChange={(e) => {
+					console.log(e);
+				}}
+			/>
+			<ICommonDataTable columns={columns} rows={rows}>
+				<ICommonDataTable.Header
+					onActionAdd={handleActionAdd}
+					onActionRefresh={handleActionRefresh}
+					enableActionAdd={true}
+					title={"Page Admin"}
+				/>
+				<ICommonDataTable.Filters
+					enableActionExport={true}
+					onFilterChange={(filter) => {
+						console.log(filter);
+					}}
+					handleFilterInputSubmit={(params) => {}}
+				>
+					<ICommonDataTable.Filters.FilterModalInput>
+						<TextInput name='filter_name' label='Name' placeholder='Name' />
+						<TextInput name='filter_phone' label='Phone' placeholder='Phone' />
+						<TextInput
+							name='filter_address'
+							label='Phone'
+							placeholder='Address'
+						/>
+						<TextInput name='filter_email' label='Phone' placeholder='Email' />
+						<DatePickerInput
+							label='Pick date'
+							placeholder='Pick date'
+							name='filter_dp'
+						/>
+					</ICommonDataTable.Filters.FilterModalInput>
 				</ICommonDataTable.Filters>
 				<ICommonDataTable.DataTable />
 			</ICommonDataTable>
@@ -50,11 +162,14 @@ export default function AdminComponent() {
 	);
 }
 
-ICommonDataTable.Header = function Header({
+ICommonDataTable.Header = function ({
 	title,
 	onActionRefresh,
 	onActionAdd,
+	enableActionAdd,
+	columns = [],
 }) {
+	// console.log(title);
 	return (
 		<Box py={"md"}>
 			<Grid>
@@ -66,37 +181,24 @@ ICommonDataTable.Header = function Header({
 						<Button variant='outline' leftSection={<IconRefresh />}>
 							Refresh
 						</Button>
-						<Button leftSection={<IconPlus />}>Add</Button>
+						{enableActionAdd && <Button leftSection={<IconPlus />}>Add</Button>}
 					</Group>
 				</Grid.Col>
 			</Grid>
 		</Box>
 	);
 };
-ICommonDataTable.Filters = function Filters({
+ICommonDataTable.Filters = function ({
 	columns = [],
 	children,
-	onFilterChange,
+	onFilterChange = (callback) => callback(filterData),
 	onSearchChange,
 	onActionExport,
+	enableActionExport,
+	filterData,
+	setFilterData,
+	handleFilterInputSubmit,
 }) {
-	const [filterData, setFilterData] = useState({
-		rowsPerPage: [5, 10, 20],
-		sortBy: columns,
-		sortType: ["asc", "desc"],
-		hideColumns: columns,
-		actionExports: [
-			{ icon: IconTableExport, text: "excel" },
-			{ icon: IconFileExport, text: "print" },
-		],
-		values: {
-			rowPerPage: 5,
-			sortBy: null,
-			sortType: "asc",
-			hideColumn: null,
-		},
-	});
-
 	const [
 		openedFilterModal,
 		{ open: openFilterModal, close: closeFilterModal },
@@ -125,11 +227,19 @@ ICommonDataTable.Filters = function Filters({
 		</Combobox.Option>
 	));
 
-	const sortByOptions = filterData.sortBy.map((item) => (
-		<Combobox.Option value={item} key={Date.now() + item}>
-			{item}
-		</Combobox.Option>
-	));
+	const sortByOptions = [
+		<Combobox.Option value={"reset"} key={Date.now() + "reset"}>
+			reset
+		</Combobox.Option>,
+		...filterData.sortBy.map(
+			(item) =>
+				item.field !== "actions" && (
+					<Combobox.Option value={item.field} key={Date.now() + item.field}>
+						{item.header}
+					</Combobox.Option>
+				)
+		),
+	];
 
 	const sortTypeOptions = filterData.sortType.map((item) => (
 		<Combobox.Option value={item} key={Date.now() + item}>
@@ -137,8 +247,8 @@ ICommonDataTable.Filters = function Filters({
 		</Combobox.Option>
 	));
 	const hideColumnOptions = filterData.hideColumns.map((item) => (
-		<Combobox.Option value={item} key={Date.now() + item}>
-			{item}
+		<Combobox.Option value={item.field} key={Date.now() + item.field}>
+			{item.hideable && item.header}
 		</Combobox.Option>
 	));
 	const actionExportOptions = filterData.actionExports.map((item) => (
@@ -148,16 +258,32 @@ ICommonDataTable.Filters = function Filters({
 			</Group>
 		</Combobox.Option>
 	));
-	function FilterModal({ opened = false, handleClose }) {
+
+	function FilterModal({
+		opened = false,
+		handleClose,
+		filterData,
+		onFilterInputSubmit,
+	}) {
 		return (
 			<Modal opened={opened} onClose={handleClose} title='Filters'>
-				{children}
+				<Grid>
+					{React.Children.map(children.props.children, (child, index) => {
+						let com = (
+							<Grid.Col span={6} key={v4()}>
+								{child}
+							</Grid.Col>
+						);
+						return React.cloneElement(com);
+					})}
+				</Grid>
 				<Group justify='end' mt={15}>
-					<Button>Filter</Button>
+					<Button onClick={onFilterInputSubmit}>Filter</Button>
 				</Group>
 			</Modal>
 		);
 	}
+
 	return (
 		<Paper withBorder shadow='sm' p='md' radius={"md"}>
 			<Grid>
@@ -167,10 +293,13 @@ ICommonDataTable.Filters = function Filters({
 							store={rowsPerPageCB}
 							position='bottom-center'
 							onOptionSubmit={(val) => {
-								setFilterData((prev) => ({
-									...prev,
-									values: { ...prev.values, rowPerPage: val },
-								}));
+								let fd = {
+									...filterData,
+									values: { ...filterData.values, rowPerPage: val },
+								};
+								setFilterData(fd);
+								onFilterChange(fd.values);
+
 								rowsPerPageCB.closeDropdown();
 							}}
 						>
@@ -193,10 +322,16 @@ ICommonDataTable.Filters = function Filters({
 							width={180}
 							position='bottom-center'
 							onOptionSubmit={(val) => {
-								setFilterData((prev) => ({
-									...prev,
-									values: { ...prev.values, sortBy: val },
-								}));
+								let sb = val;
+								if (val === "reset") {
+									sb = "";
+								}
+								let fd = {
+									...filterData,
+									values: { ...filterData.values, sortBy: sb },
+								};
+								setFilterData(fd);
+								onFilterChange(fd.values);
 								sortByCB.closeDropdown();
 							}}
 						>
@@ -211,7 +346,7 @@ ICommonDataTable.Filters = function Filters({
 								</Button>
 							</Combobox.Target>
 							<Combobox.Dropdown>
-								<Combobox.Options>{sortByOptions}</Combobox.Options>
+								<Combobox.Options> {sortByOptions}</Combobox.Options>
 							</Combobox.Dropdown>
 						</Combobox>
 						<Combobox
@@ -219,10 +354,12 @@ ICommonDataTable.Filters = function Filters({
 							width={180}
 							position='bottom-center'
 							onOptionSubmit={(val) => {
-								setFilterData((prev) => ({
-									...prev,
-									values: { ...prev.values, sortType: val },
-								}));
+								let fd = {
+									...filterData,
+									values: { ...filterData.values, sortType: val },
+								};
+								setFilterData(fd);
+								onFilterChange(fd.values);
 								sortTypeCB.closeDropdown();
 							}}
 						>
@@ -249,10 +386,31 @@ ICommonDataTable.Filters = function Filters({
 							width={180}
 							position='bottom-center'
 							onOptionSubmit={(val) => {
-								setFilterData((prev) => ({
-									...prev,
-									values: { ...prev.values, hideColumn: val },
-								}));
+								let hideColumn = val;
+								if (!filterData.values.hideColumn.includes(hideColumn)) {
+									let fd = {
+										...filterData,
+										values: {
+											...filterData.values,
+											hideColumn: [...filterData.values.hideColumn, hideColumn],
+										},
+									};
+									setFilterData(fd);
+									onFilterChange(fd.values);
+								} else {
+									let fd = {
+										...filterData,
+										values: {
+											...filterData.values,
+											hideColumn: filterData.values.hideColumn.filter(
+												(v) => v !== hideColumn
+											),
+										},
+									};
+									setFilterData(fd);
+									onFilterChange(fd.values);
+								}
+
 								hideColumnsCB.closeDropdown();
 							}}
 						>
@@ -263,7 +421,7 @@ ICommonDataTable.Filters = function Filters({
 									variant='light'
 									onClick={() => hideColumnsCB.toggleDropdown()}
 								>
-									<IconEye size={16} />
+									<IconEyeOff size={16} />
 								</ActionIcon>
 							</Combobox.Target>
 							<Combobox.Dropdown>
@@ -274,27 +432,30 @@ ICommonDataTable.Filters = function Filters({
 				</Grid.Col>
 				<Grid.Col span={6}>
 					<Group justify='end'>
-						<Combobox
-							store={actionExportCB}
-							position='bottom-center'
-							onOptionSubmit={(val) => {
-								actionExportCB.closeDropdown();
-							}}
-						>
-							<Combobox.Target>
-								<Button
-									color='gray'
-									variant='light'
-									rightSection={<IconUpload size={16} />}
-									onClick={() => actionExportCB.toggleDropdown()}
-								>
-									Export
-								</Button>
-							</Combobox.Target>
-							<Combobox.Dropdown>
-								<Combobox.Options>{actionExportOptions}</Combobox.Options>
-							</Combobox.Dropdown>
-						</Combobox>
+						{enableActionExport && (
+							<Combobox
+								store={actionExportCB}
+								position='bottom-center'
+								onOptionSubmit={(val) => {
+									actionExportCB.closeDropdown();
+								}}
+							>
+								<Combobox.Target>
+									<Button
+										color='gray'
+										variant='light'
+										rightSection={<IconUpload size={16} />}
+										onClick={() => actionExportCB.toggleDropdown()}
+									>
+										Export
+									</Button>
+								</Combobox.Target>
+								<Combobox.Dropdown>
+									<Combobox.Options>{actionExportOptions}</Combobox.Options>
+								</Combobox.Dropdown>
+							</Combobox>
+						)}
+
 						<Input
 							placeholder='Search'
 							leftSection={<IconSearch size={"16"} />}
@@ -305,54 +466,152 @@ ICommonDataTable.Filters = function Filters({
 					</Group>
 				</Grid.Col>
 			</Grid>
-			{/* <FilterModal opened={openedFilterModal} handleClose={closeFilterModal} /> */}
-			<FilterModal opened={openedFilterModal} handleClose={closeFilterModal} />
+			<FilterModal
+				filterData={filterData}
+				opened={openedFilterModal}
+				handleClose={closeFilterModal}
+				onFilterInputSubmit={handleFilterInputSubmit}
+			/>
 		</Paper>
 	);
 };
-ICommonDataTable.Filters.FilterModal = function FilterInput({ children }) {
+ICommonDataTable.Filters.FilterModalInput = function ({ children }) {
 	return children;
 };
 
-ICommonDataTable.DataTable = function DataTable({
-	columns,
-	rows,
+ICommonDataTable.DataTable = function ({
+	columns = [],
+	rows = [],
 	currentPage = 0,
 	totalPage = 0,
 	onPageChange,
 	eventOnRowsAction,
+	showRowNumber = true,
+	filterData,
+	setFilterData,
 }) {
+	const [columnsFromProp, setColumnsFromProp] = useState([]);
+
+	useEffect(() => {
+		setColumnsFromProp(columns);
+		if (columns.some((col) => col.type === "actions")) {
+			let colAction = columns.filter((col) => col.type === "actions");
+			let noColAction = columns.filter((col) => col.type !== "actions");
+
+			if (showRowNumber) {
+				setColumnsFromProp([
+					...colAction,
+					{
+						header: "Nº",
+						field: "irow_index",
+					},
+
+					...noColAction,
+				]);
+			} else {
+				setColumnsFromProp([...colAction, ...noColAction]);
+			}
+		} else if (showRowNumber) {
+			setColumnsFromProp([
+				{
+					header: "Nº",
+					field: "irow_index",
+				},
+				...columns,
+			]);
+		}
+	}, []);
+
+	const RenderActionMenu = ({ row }) => {
+		const actionMenuCB = useCombobox({
+			onDropdownClose: () => actionMenuCB.resetSelectedOption(),
+		});
+		return (
+			<Table.Td align='center' width={80}>
+				<Combobox
+					width={150}
+					store={actionMenuCB}
+					position='bottom-center'
+					onOptionSubmit={() => {}}
+				>
+					<Combobox.Target>
+						<ActionIcon
+							variant='transparent'
+							onClick={() => actionMenuCB.toggleDropdown()}
+						>
+							<IconTool size={14} />
+						</ActionIcon>
+					</Combobox.Target>
+					<Combobox.Dropdown>
+						<Combobox.Options>
+							{columnsFromProp.map((col, index) => {
+								if (col.type === "actions") {
+									const Opt = col.getAction;
+									return Opt().map((child, index) => {
+										return React.cloneElement(child, {
+											key: v4(),
+											row: row,
+										});
+									});
+
+									// return <Opt key={Date.now() + index * 5} />;
+								}
+							})}
+						</Combobox.Options>
+					</Combobox.Dropdown>
+				</Combobox>
+			</Table.Td>
+		);
+	};
+
 	return (
 		<Paper withBorder shadow='sm' p='md' radius={"md"} mt={16}>
 			<Table.ScrollContainer minWidth={390}>
 				<Table>
 					<Table.Thead>
 						<Table.Tr>
-							<Table.Th>Element position</Table.Th>
-							<Table.Th>Element name</Table.Th>
-							<Table.Th>Symbol</Table.Th>
-							<Table.Th>Atomic mass</Table.Th>
+							{/* {showRowNumber && <Table.Th w={30}>Nº</Table.Th>} */}
+							{columnsFromProp.map((col) => {
+								return (
+									!filterData.values.hideColumn.includes(col.field) && (
+										<Table.Th
+											key={v4()}
+											ta={
+												col.type === "actions" || col.field === "irow_index"
+													? "center"
+													: "left"
+											}
+										>
+											{col.header}
+										</Table.Th>
+									)
+								);
+							})}
 						</Table.Tr>
 					</Table.Thead>
 					<Table.Tbody>
-						<Table.Tr>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-						</Table.Tr>
-						<Table.Tr>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-						</Table.Tr>
-						<Table.Tr>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-							<Table.Td>test</Table.Td>
-						</Table.Tr>
+						{rows.map((row, index) => (
+							<Table.Tr key={v4()}>
+								{[
+									<RenderActionMenu key={v4()} row={row} />,
+									columnsFromProp.map((col, colIndex) => {
+										return (
+											col.type !== "actions" &&
+											!filterData.values.hideColumn.includes(col.field) && (
+												<Table.Td
+													key={v4()}
+													ta={col.field === "irow_index" && "center"}
+												>
+													{col.field === "irow_index"
+														? index + 1
+														: row[col.field]}
+												</Table.Td>
+											)
+										);
+									}),
+								]}
+							</Table.Tr>
+						))}
 					</Table.Tbody>
 				</Table>
 			</Table.ScrollContainer>
@@ -378,33 +637,57 @@ ICommonDataTable.DataTable = function DataTable({
 	);
 };
 
+ICommonDataTable.ActionsMenuItem = function ({
+	icon,
+	onActionClick = (e) => {},
+	label,
+	row,
+}) {
+	return (
+		<Combobox.Option onClick={() => onActionClick(row)}>
+			<Group>
+				{React.cloneElement(icon)} {label}
+			</Group>
+		</Combobox.Option>
+	);
+};
+
 function ICommonDataTable({
 	children,
 	title,
-	columns,
+	columns = [],
 	rows,
 	currentPage = 0,
 	totalPage = 0,
 }) {
-	// return (
-	// 	<Box>
-	// 		<Header title={title} />
-	// 		<Filters columns={columns} />
-	// 		<DataTable
-	// 			columns={columns}
-	// 			rows={rows}
-	// 			currentPage={currentPage}
-	// 			totalPage={totalPage}
-	// 		/>
-	// 	</Box>
-	// );
+	const [filterData, setFilterData] = useState({
+		rowsPerPage: [5, 10, 20],
+		sortBy: columns,
+		sortType: ["asc", "desc"],
+		hideColumns: columns.filter((item) => item.hideable),
+		actionExports: [
+			{ icon: IconTableExport, text: "excel" },
+			{ icon: IconFileExport, text: "print" },
+		],
+		values: {
+			rowPerPage: 5,
+			sortBy: null,
+			sortType: "asc",
+			hideColumn: [],
+			filterForm: {},
+		},
+	});
+	const handleSetFilterData = function (value) {
+		setFilterData(value);
+	};
 	return React.Children.map(children, (child, index) => {
 		return React.cloneElement(child, {
-			title: title,
 			columns: columns,
 			rows: rows,
 			currentPage: currentPage,
 			totalPage: totalPage,
+			setFilterData: handleSetFilterData,
+			filterData: filterData,
 		});
 	});
 }
