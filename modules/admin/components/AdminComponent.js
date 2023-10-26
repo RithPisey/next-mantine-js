@@ -19,6 +19,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconEdit,
   IconEye,
   IconEyeClosed,
   IconEyeOff,
@@ -28,15 +29,38 @@ import {
   IconRefresh,
   IconSearch,
   IconSelector,
+  IconSettings,
   IconSortAscending,
   IconSortDescending,
   IconTableExport,
+  IconTool,
+  IconTools,
+  IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
 import React, { useEffect, useState } from "react";
 
 export default function AdminComponent() {
   const columns = [
+    {
+      field: "actions",
+      header: "Actions",
+      type: "actions",
+      getAction: (params) => {
+        return [
+          <ICommonDataTable.ActionsMenuItem
+            icon={<IconTrash />}
+            label={"Delete"}
+            onActionClick={() => {}}
+          />,
+          <ICommonDataTable.ActionsMenuItem
+            icon={<IconEdit />}
+            label={"Edit"}
+            onActionClick={() => {}}
+          />,
+        ];
+      },
+    },
     {
       field: "name",
       header: "Name",
@@ -64,10 +88,38 @@ export default function AdminComponent() {
     },
   ];
 
+  const rows = [
+    {
+      id: 1,
+      name: "John",
+      latin_name: "John",
+      phone: "123989121",
+      alt_phone: "012334556",
+      address: "home test",
+    },
+    {
+      id: 2,
+      name: "Mike",
+      latin_name: "Mike",
+      phone: "123989121",
+      alt_phone: "012334556",
+      address: "elephant test",
+    },
+  ];
+
+  const handleActionAdd = function () {};
+
+  const handleActionRefresh = function () {};
+
   return (
     <Box>
-      <ICommonDataTable columns={columns}>
-        <ICommonDataTable.Header enableActionAdd={true} title={"Page Admin"} />
+      <ICommonDataTable columns={columns} rows={rows}>
+        <ICommonDataTable.Header
+          onActionAdd={handleActionAdd}
+          onActionRefresh={handleActionRefresh}
+          enableActionAdd={true}
+          title={"Page Admin"}
+        />
         <ICommonDataTable.Filters enableActionExport={true}>
           <ICommonDataTable.Filters.FilterModalInput>
             <TextInput key="filter_name" label="Name" placeholder="Name" />
@@ -82,14 +134,14 @@ export default function AdminComponent() {
   );
 }
 
-ICommonDataTable.Header = function Header({
+ICommonDataTable.Header = function ({
   title,
   onActionRefresh,
   onActionAdd,
   enableActionAdd,
   columns = [],
 }) {
-  console.log(title);
+  // console.log(title);
   return (
     <Box py={"md"}>
       <Grid>
@@ -108,7 +160,7 @@ ICommonDataTable.Header = function Header({
     </Box>
   );
 };
-ICommonDataTable.Filters = function Filters({
+ICommonDataTable.Filters = function ({
   columns = [],
   children,
   onFilterChange = (value) => value,
@@ -204,10 +256,6 @@ ICommonDataTable.Filters = function Filters({
       </Modal>
     );
   }
-
-  useEffect(() => {
-    console.log(children);
-  });
 
   return (
     <Paper withBorder shadow="sm" p="md" radius={"md"}>
@@ -393,13 +441,11 @@ ICommonDataTable.Filters = function Filters({
     </Paper>
   );
 };
-ICommonDataTable.Filters.FilterModalInput = function FilterModalInput({
-  children,
-}) {
+ICommonDataTable.Filters.FilterModalInput = function ({ children }) {
   return children;
 };
 
-ICommonDataTable.DataTable = function DataTable({
+ICommonDataTable.DataTable = function ({
   columns = [],
   rows = [],
   currentPage = 0,
@@ -410,17 +456,92 @@ ICommonDataTable.DataTable = function DataTable({
   filterData,
   setFilterData,
 }) {
+  const [columnsFromProp, setColumnsFromProp] = useState([]);
+
+  useEffect(() => {
+    setColumnsFromProp(columns);
+    if (columns.some((col) => col.type === "actions")) {
+      let colAction = columns.filter((col) => col.type === "actions");
+      let noColAction = columns.filter((col) => col.type !== "actions");
+
+      if (showRowNumber) {
+        setColumnsFromProp([
+          ...colAction,
+          {
+            header: "Nº",
+            field: "irow_index",
+          },
+
+          ...noColAction,
+        ]);
+      } else {
+        setColumnsFromProp([...colAction, ...noColAction]);
+      }
+    } else if (showRowNumber) {
+      setColumnsFromProp([
+        {
+          header: "Nº",
+          field: "irow_index",
+        },
+        ...columns,
+      ]);
+    }
+  }, []);
+
+  const RenderActionMenu = ({ row }) => {
+    const actionMenuCB = useCombobox({
+      onDropdownClose: () => actionMenuCB.resetSelectedOption(),
+    });
+    return (
+      <Table.Td align="center" width={80}>
+        <Combobox
+          width={150}
+          store={actionMenuCB}
+          position="bottom-center"
+          onOptionSubmit={() => {}}
+        >
+          <Combobox.Target>
+            <ActionIcon
+              variant="transparent"
+              onClick={() => actionMenuCB.toggleDropdown()}
+            >
+              <IconTool size={14} />
+            </ActionIcon>
+          </Combobox.Target>
+          <Combobox.Dropdown>
+            <Combobox.Options>
+              {columnsFromProp.map((col, index) => {
+                if (col.type === "actions") {
+                  console.log(col);
+                  const Opt = col.getAction;
+                  return <Opt key={Date.now() + index * 5} />;
+                }
+              })}
+            </Combobox.Options>
+          </Combobox.Dropdown>
+        </Combobox>
+      </Table.Td>
+    );
+  };
+
   return (
     <Paper withBorder shadow="sm" p="md" radius={"md"} mt={16}>
       <Table.ScrollContainer minWidth={390}>
         <Table>
           <Table.Thead>
             <Table.Tr>
-              {showRowNumber && <Table.Th>Nº</Table.Th>}
-              {columns.map((col) => {
+              {/* {showRowNumber && <Table.Th w={30}>Nº</Table.Th>} */}
+              {columnsFromProp.map((col) => {
                 return (
                   !filterData.values.hideColumn.includes(col.field) && (
-                    <Table.Th key={Date.now() + col.header}>
+                    <Table.Th
+                      key={Date.now() + col.header}
+                      ta={
+                        col.type === "actions" || col.field === "irow_index"
+                          ? "center"
+                          : "left"
+                      }
+                    >
                       {col.header}
                     </Table.Th>
                   )
@@ -430,11 +551,24 @@ ICommonDataTable.DataTable = function DataTable({
           </Table.Thead>
           <Table.Tbody>
             {rows.map((row, index) => (
-              <Table.Tr key={Date.now() + row[col.field]}>
-                <Table.Td>{showRowNumber && index + 1}</Table.Td>
-                {columns.map((col) => {
-                  return <Table.Td>{row[col.field]}</Table.Td>;
-                })}
+              <Table.Tr key={Date.now() + index * 2}>
+                {[
+                  <RenderActionMenu row={row} />,
+                  columnsFromProp.map((col, colIndex) => {
+                    return (
+                      col.type !== "actions" && (
+                        <Table.Td
+                          key={Date.now() + colIndex * 3}
+                          ta={col.field === "irow_index" && "center"}
+                        >
+                          {col.field === "irow_index"
+                            ? index + 1
+                            : row[col.field]}
+                        </Table.Td>
+                      )
+                    );
+                  }),
+                ]}
               </Table.Tr>
             ))}
           </Table.Tbody>
@@ -459,6 +593,16 @@ ICommonDataTable.DataTable = function DataTable({
         </Grid.Col>
       </Grid>
     </Paper>
+  );
+};
+
+ICommonDataTable.ActionsMenuItem = function ({ icon, onActionClick, label }) {
+  return (
+    <Combobox.Option onClick={onActionClick}>
+      <Group>
+        {React.cloneElement(icon)} {label}
+      </Group>
+    </Combobox.Option>
   );
 };
 
