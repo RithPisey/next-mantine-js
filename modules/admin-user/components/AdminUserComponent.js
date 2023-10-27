@@ -1,13 +1,10 @@
 "use client";
-import { ICommonDataTable } from "@/components/ICommonDatatable/ICommonDatatable";
 import { Box, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
-import React from "react";
 import { v4 } from "uuid";
 
-export default function AdminComponent() {
+export default function AdminUserComponent() {
 	const columns = [
 		{
 			field: "actions",
@@ -86,7 +83,7 @@ export default function AdminComponent() {
 		alert("refresh");
 	};
 
-	const filterInputs = useForm({
+	const fi = useForm({
 		initialValues: {
 			name: "",
 			date: "",
@@ -95,41 +92,10 @@ export default function AdminComponent() {
 
 	return (
 		<Box>
-			<ICommonDataTable
-				columns={columns}
-				rows={rows}
-				onFilterChange={(filters) => {
-					console.log(filters);
-				}}
-				onActionAdd={handleActionAdd}
-				onActionRefresh={handleActionRefresh}
-				enableActionAdd={true}
-				title={"Page Admin"}
-				enableActionExport={true}
-				enableFilters={true}
-				onSearchInputChange={(text) => {
-					console.log(text);
-				}}
-				onActionExport={(exportType) => {
-					console.log(exportType);
-				}}
-				onFilterInputSubmit={() => {
-					console.log("onFilterInputSubmit");
-					console.log(filterInputs.values);
-				}}
-				filterInputs={[
-					<DateInput
-						{...filterInputs.getInputProps("date")}
-						label='Date input'
-						placeholder='Date input'
-					/>,
-					<TextInput
-						{...filterInputs.getInputProps("name")}
-						label='Name'
-						placeholder='Name'
-					/>,
-				]}
-				totalPages={2}
+			<TextInput
+				{...fi.getInputProps("name")}
+				label='Name'
+				placeholder='Name'
 			/>
 		</Box>
 	);

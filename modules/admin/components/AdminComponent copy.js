@@ -95,6 +95,12 @@ export default function AdminComponent() {
 
 	return (
 		<Box>
+			<TextInput
+				{...filterInputs.getInputProps("name")}
+				label='Name'
+				placeholder='Name'
+				key={v4()}
+			/>
 			<ICommonDataTable
 				columns={columns}
 				rows={rows}
@@ -115,18 +121,13 @@ export default function AdminComponent() {
 				}}
 				onFilterInputSubmit={() => {
 					console.log("onFilterInputSubmit");
-					console.log(filterInputs.values);
 				}}
 				filterInputs={[
 					<DateInput
 						{...filterInputs.getInputProps("date")}
 						label='Date input'
 						placeholder='Date input'
-					/>,
-					<TextInput
-						{...filterInputs.getInputProps("name")}
-						label='Name'
-						placeholder='Name'
+						key={v4()}
 					/>,
 				]}
 				totalPages={2}

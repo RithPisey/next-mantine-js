@@ -10,7 +10,15 @@ import {
 	TextInput,
 	Title,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 export default function Home() {
+	const filterInputs = useForm({
+		initialValues: {
+			name: "",
+			date: "",
+		},
+	});
+
 	return (
 		<div>
 			<Button>Primary button</Button>
@@ -36,6 +44,12 @@ export default function Home() {
 					<Button>Submit</Button>
 				</Group>
 			</Fieldset>
+
+			<TextInput
+				{...filterInputs.getInputProps("name")}
+				label='Name'
+				placeholder='Name'
+			/>
 		</div>
 	);
 }
