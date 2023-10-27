@@ -107,6 +107,7 @@ export default function AdminComponent() {
 				title={"Page Admin"}
 				enableActionExport={true}
 				enableFilters={true}
+				enableSearchInput={true}
 				onSearchInputChange={(text) => {
 					console.log(text);
 				}}

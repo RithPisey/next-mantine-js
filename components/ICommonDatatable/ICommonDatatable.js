@@ -68,16 +68,15 @@ CommonDataTable.Header = function ({
 	);
 };
 CommonDataTable.Filters = function ({
-	columns = [],
 	children,
 	onFilterChange = (callback) => callback(filterData),
 	onSearchInputChange,
 	onActionExport,
 	enableActionExport,
 	enableFilters,
+	enableSearchInput = true,
 	filterData,
 	setFilterData,
-	handleFilterInputSubmit,
 	filterInputs,
 	onFilterInputSubmit,
 }) {
@@ -317,11 +316,13 @@ CommonDataTable.Filters = function ({
 							</Combobox>
 						)}
 
-						<Input
-							placeholder='Search'
-							leftSection={<IconSearch size={"16"} />}
-							onChange={(e) => onSearchInputChange(e.target.value)}
-						/>
+						{enableSearchInput && (
+							<Input
+								placeholder='Search'
+								leftSection={<IconSearch size={"16"} />}
+								onChange={(e) => onSearchInputChange(e.target.value)}
+							/>
+						)}
 						{enableFilters && (
 							<ActionIcon onClick={openFilterModal} size={"lg"}>
 								<IconFilter />
@@ -582,6 +583,7 @@ export function ICommonDataTable({
 	title = "",
 	enableActionExport,
 	enableFilters,
+	enableSearchInput,
 	onSearchInputChange,
 	onActionExport,
 	filterInputs = [],
@@ -604,6 +606,7 @@ export function ICommonDataTable({
 			<CommonDataTable.Filters
 				enableActionExport={enableActionExport}
 				enableFilters={enableFilters}
+				enableSearchInput={enableSearchInput}
 				onSearchInputChange={onSearchInputChange}
 				onActionExport={(exportType) => onActionExport(exportType)}
 				filterInputs={filterInputs}
