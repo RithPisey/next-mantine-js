@@ -1,7 +1,9 @@
 "use client";
+import { IDataTableWithTabs } from "@/components/Features/IDatatableWithTabs/IDatatableWithTabs";
 import { Box, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { IconEdit, IconList, IconTrash } from "@tabler/icons-react";
 import { v4 } from "uuid";
 
 export default function AdminUserComponent() {
@@ -12,14 +14,14 @@ export default function AdminUserComponent() {
 			type: "actions",
 			getAction: (params) => {
 				return [
-					<ICommonDataTable.ActionsMenuItem
+					<IDataTableWithTabs.ActionsMenuItem
 						icon={<IconTrash />}
 						label={"Delete"}
 						onActionClick={(params) => {
 							alert("delete");
 						}}
 					/>,
-					<ICommonDataTable.ActionsMenuItem
+					<IDataTableWithTabs.ActionsMenuItem
 						icon={<IconEdit />}
 						label={"Edit"}
 						onActionClick={(params) => {
@@ -53,6 +55,7 @@ export default function AdminUserComponent() {
 			field: "address",
 			header: "Address",
 			hideable: true,
+			tab: "delete",
 		},
 	];
 
@@ -83,7 +86,7 @@ export default function AdminUserComponent() {
 		alert("refresh");
 	};
 
-	const fi = useForm({
+	const filterInputs = useForm({
 		initialValues: {
 			name: "",
 			date: "",
@@ -92,10 +95,49 @@ export default function AdminUserComponent() {
 
 	return (
 		<Box>
-			<TextInput
-				{...fi.getInputProps("name")}
-				label='Name'
-				placeholder='Name'
+			<IDataTableWithTabs
+				columns={columns}
+				rows={rows}
+				onFilterChange={(filters) => {
+					console.log(filters);
+				}}
+				onActionAdd={handleActionAdd}
+				onActionRefresh={handleActionRefresh}
+				enableActionAdd={true}
+				title={"Page Admin"}
+				enableActionExport={true}
+				enableFilters={true}
+				enableSearchInput={true}
+				onSearchInputChange={(text) => {
+					console.log(text);
+				}}
+				onActionExport={(exportType) => {
+					console.log(exportType);
+				}}
+				onFilterInputSubmit={() => {
+					console.log("onFilterInputSubmit");
+					console.log(filterInputs.values);
+				}}
+				filterInputs={[
+					<DateInput
+						{...filterInputs.getInputProps("date")}
+						label='Date input'
+						placeholder='Date input'
+					/>,
+					<TextInput
+						{...filterInputs.getInputProps("name")}
+						label='Name'
+						placeholder='Name'
+					/>,
+				]}
+				totalPages={2}
+				tabListValues={[
+					{ key: "main", name: "Main", icon: IconList },
+					{ key: "delete", name: "Delete", icon: IconTrash },
+				]}
+				onTabChange={(value) => {
+					alert(value);
+				}}
 			/>
 		</Box>
 	);

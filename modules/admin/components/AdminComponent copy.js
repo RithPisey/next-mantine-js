@@ -1,5 +1,5 @@
 "use client";
-import { ICommonDataTable } from "@/components/ICommonDatatable/ICommonDatatable";
+import { ICommonDataTable } from "@/components/Features/ICommonDatatable/ICommonDatatable";
 import { Box, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
