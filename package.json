@@ -6,7 +6,9 @@
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
@@ -43,8 +45,17 @@
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.0.0-rc.5",
+    "@storybook/addon-essentials": "^7.5.1",
+    "@storybook/addon-interactions": "^7.5.1",
+    "@storybook/addon-links": "^7.5.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.5.1",
+    "@storybook/nextjs": "^7.5.1",
+    "@storybook/react": "^7.5.1",
+    "@storybook/testing-library": "^0.2.2",
     "postcss": "^8.4.30",
     "postcss-preset-mantine": "^1.7.0",
-    "postcss-simple-vars": "^7.0.1"
+    "postcss-simple-vars": "^7.0.1",
+    "storybook": "^7.5.1"
   }
 }
