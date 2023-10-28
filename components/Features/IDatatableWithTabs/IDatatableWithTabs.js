@@ -463,9 +463,6 @@ CommonDataTable.DataTable = function ({
 	};
 
 	const TableCom = function ({ tab }) {
-		useEffect(() => {
-			console.log(tab);
-		}, [tab]);
 		return (
 			<Box>
 				{" "}
@@ -621,12 +618,21 @@ function CommonDataTable({
 	currentPage = 1,
 	totalPage = 0,
 	onFilterChange = (callback) => callback(filterData),
+	tabListValues,
+
+	tab,
+	onTabChange = (value) => {},
 }) {
+	useEffect(() => {
+		console.log(tab);
+	}, [tab]);
 	const [filterData, setFilterData] = useState({
 		rowsPerPage: [5, 10, 20],
 		sortBy: columns,
 		sortType: ["asc", "desc"],
-		hideColumns: columns.filter((item) => item.hideable),
+		hideColumns: columns.filter((item) =>
+			item.tab ? item.tab === tab && item.hideable : item.hideable
+		),
 		actionExports: [
 			{ icon: IconTableExport, text: "excel" },
 			{ icon: IconFileExport, text: "print" },
@@ -642,6 +648,7 @@ function CommonDataTable({
 	const handleSetFilterData = function (value) {
 		setFilterData(value);
 	};
+
 	return React.Children.map(children, (child, index) => {
 		return React.cloneElement(child, {
 			columns: columns,
@@ -651,6 +658,7 @@ function CommonDataTable({
 			setFilterData: handleSetFilterData,
 			filterData: filterData,
 			onFilterChange: onFilterChange,
+			onTabChange: onTabChange,
 		});
 	});
 }
@@ -686,6 +694,8 @@ export function IDataTableWithTabs({
 			columns={columns}
 			rows={rows}
 			onFilterChange={onFilterChange}
+			tabListValues={tabListValues}
+			onTabChange={onTabChange}
 		>
 			<CommonDataTable.Header
 				onActionAdd={onActionAdd}
@@ -707,7 +717,6 @@ export function IDataTableWithTabs({
 				totalPages={totalPages}
 				currentPage={currentPage}
 				tabListValues={tabListValues}
-				onTabChange={onTabChange}
 			/>
 		</CommonDataTable>
 	);
