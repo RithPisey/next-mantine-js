@@ -581,6 +581,7 @@ CommonDataTable.DataTable = function ({
 								boundaries={1}
 								siblings={1}
 								withEdges
+								value={filterData.values.page}
 								onChange={(val) => {
 									let fd = {
 										...filterData,
