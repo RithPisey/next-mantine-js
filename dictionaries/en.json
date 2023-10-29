@@ -1,5 +1,25 @@
 {
-  "user": {
-    "userPage": "User Page"
-  }
+	"user": {
+		"userPage": "User Page"
+	},
+	"datatable": {
+		"filters": "Filters",
+		"filter": "Filter",
+		"add": "Add",
+		"refresh": "Refresh",
+		"asc": "ASC",
+		"desc": "DESC",
+		"sortby": "Sort by",
+		"reset": "Reset",
+		"exports": "Exports",
+		"export": "Export",
+		"print": "Print",
+		"excel": "Excel",
+		"search": "Search",
+		"n0": "Nº",
+		"actions": "Action",
+		"action": "Action",
+		"tab": "Tab",
+		"of": "Of"
+	}
 }

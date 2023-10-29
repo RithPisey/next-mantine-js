@@ -55,7 +55,6 @@ const RenderNavigation = ({ paths, lang }) => {
 
 const renderNavLinks = (navItems, lang, pathName) => {
 	const langPath = `/${lang}`;
-
 	return navItems.map((item, index) => {
 		const itemPath = item.link === "/" ? langPath : `${langPath}${item.link}`;
 		const isActive = pathName === itemPath;
@@ -125,7 +124,7 @@ const renderNavLinks = (navItems, lang, pathName) => {
 						color='secondary'
 						childrenOffset={0}
 						component={Link}
-						href={item.link}
+						href={langPath + item.link}
 					/>
 				</Can>
 			);

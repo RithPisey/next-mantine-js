@@ -75,7 +75,7 @@ export default function NavHeader({ toggleDesktop, toggleMobile }) {
 									>
 										<Group>
 											<span
-												class={
+												className={
 													locale === "kh"
 														? "flag flag-country-kh"
 														: "flag flag-country-us"

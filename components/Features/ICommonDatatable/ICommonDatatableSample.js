@@ -44,7 +44,7 @@ CommonDataTable.Header = function ({
 	columns = [],
 	translate,
 }) {
-	// console.log(translate);
+	console.log(translate);
 	return (
 		<Box py={"md"}>
 			<Grid>
@@ -115,7 +115,7 @@ CommonDataTable.Filters = function ({
 
 	const sortByOptions = [
 		<Combobox.Option value={"reset"} key={Date.now() + "reset"}>
-			{translate?.datatable.reset}
+			reset
 		</Combobox.Option>,
 		...filterData.sortBy.map(
 			(item) =>
@@ -313,7 +313,7 @@ CommonDataTable.Filters = function ({
 										rightSection={<IconUpload size={16} />}
 										onClick={() => actionExportCB.toggleDropdown()}
 									>
-										{translate?.datatable.export}
+										Export
 									</Button>
 								</Combobox.Target>
 								<Combobox.Dropdown>
@@ -639,9 +639,10 @@ export function ICommonDataTable({
 	onFilterInputSubmit,
 	slots = <></>,
 	onStatusChange = (callback) => {},
+	translate = {},
 }) {
 	// const lang = useGetLanguage();
-	const [translate] = useGetTranslate();
+	// const [translate] = useGetTranslate();
 
 	// const { user } = await getDictionary(lang);
 
@@ -723,4 +724,5 @@ ICommonDataTable.propTypes = {
 	slots: PropTypes.element,
 	onStatusChange: PropTypes.func,
 	showRowNumber: PropTypes.bool,
+	translate: PropTypes.object,
 };

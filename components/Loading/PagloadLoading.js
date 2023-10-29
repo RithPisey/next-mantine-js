@@ -12,7 +12,7 @@ export default function PagloadLoading({ children }) {
 		return () => {
 			setIsLoad(false);
 		};
-	});
+	}, []);
 	return (
 		<>
 			{isLoad && (

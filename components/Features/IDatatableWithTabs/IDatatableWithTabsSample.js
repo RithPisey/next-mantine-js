@@ -13,6 +13,7 @@ import {
 	Space,
 	Switch,
 	Table,
+	Tabs,
 	Text,
 	Title,
 	useCombobox,
@@ -22,6 +23,7 @@ import {
 	IconEyeOff,
 	IconFileExport,
 	IconFilter,
+	IconList,
 	IconPlus,
 	IconRefresh,
 	IconSearch,
@@ -30,21 +32,21 @@ import {
 	IconSortDescending,
 	IconTableExport,
 	IconTool,
+	IconTrash,
 	IconUpload,
 } from "@tabler/icons-react";
-import React, { useEffect, useState } from "react";
-import { v4 } from "uuid";
 import PropTypes from "prop-types";
-import { useGetTranslate } from "../../../hooks/useGetDictionary";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { v4 } from "uuid";
+const IContext = createContext();
 CommonDataTable.Header = function ({
 	title,
 	onActionRefresh,
 	onActionAdd,
 	enableActionAdd,
 	columns = [],
-	translate,
 }) {
-	// console.log(translate);
+	// console.log(title);
 	return (
 		<Box py={"md"}>
 			<Grid>
@@ -58,11 +60,11 @@ CommonDataTable.Header = function ({
 							onClick={onActionRefresh}
 							leftSection={<IconRefresh />}
 						>
-							{translate?.datatable.refresh}
+							Refresh
 						</Button>
 						{enableActionAdd && (
 							<Button onClick={onActionAdd} leftSection={<IconPlus />}>
-								{translate?.datatable.add}
+								Add
 							</Button>
 						)}
 					</Group>
@@ -83,7 +85,6 @@ CommonDataTable.Filters = function ({
 	setFilterData,
 	filterInputs,
 	onFilterInputSubmit,
-	translate,
 }) {
 	const [
 		openedFilterModal,
@@ -115,7 +116,7 @@ CommonDataTable.Filters = function ({
 
 	const sortByOptions = [
 		<Combobox.Option value={"reset"} key={Date.now() + "reset"}>
-			{translate?.datatable.reset}
+			reset
 		</Combobox.Option>,
 		...filterData.sortBy.map(
 			(item) =>
@@ -129,7 +130,7 @@ CommonDataTable.Filters = function ({
 
 	const sortTypeOptions = filterData.sortType.map((item) => (
 		<Combobox.Option value={item} key={Date.now() + item}>
-			{translate?.datatable[item]}
+			{item}
 		</Combobox.Option>
 	));
 	const hideColumnOptions = filterData.hideColumns.map((item) => (
@@ -144,7 +145,7 @@ CommonDataTable.Filters = function ({
 			key={Date.now() + item.text}
 		>
 			<Group>
-				<item.icon size={14} /> {translate?.datatable[item.text]}
+				<item.icon size={14} /> {item.text}
 			</Group>
 		</Combobox.Option>
 	));
@@ -207,7 +208,7 @@ CommonDataTable.Filters = function ({
 									rightSection={<IconSelector size={16} />}
 									onClick={() => sortByCB.toggleDropdown()}
 								>
-									{translate?.datatable.sortby} {filterData.values.sortBy}
+									Sort By {filterData.values.sortBy}
 								</Button>
 							</Combobox.Target>
 							<Combobox.Dropdown>
@@ -304,7 +305,6 @@ CommonDataTable.Filters = function ({
 								onOptionSubmit={(val) => {
 									actionExportCB.closeDropdown();
 								}}
-								width={140}
 							>
 								<Combobox.Target>
 									<Button
@@ -313,7 +313,7 @@ CommonDataTable.Filters = function ({
 										rightSection={<IconUpload size={16} />}
 										onClick={() => actionExportCB.toggleDropdown()}
 									>
-										{translate?.datatable.export}
+										Export
 									</Button>
 								</Combobox.Target>
 								<Combobox.Dropdown>
@@ -324,7 +324,7 @@ CommonDataTable.Filters = function ({
 
 						{enableSearchInput && (
 							<Input
-								placeholder={translate?.datatable.search}
+								placeholder='Search'
 								leftSection={<IconSearch size={"16"} />}
 								onChange={(e) => onSearchInputChange(e.target.value)}
 							/>
@@ -343,7 +343,6 @@ CommonDataTable.Filters = function ({
 				handleClose={closeFilterModal}
 				onFilterInputSubmit={onFilterInputSubmit}
 				filterInputs={filterInputs}
-				translate={translate}
 			/>
 		</Paper>
 	);
@@ -355,14 +354,9 @@ function FilterModal({
 	filterData,
 	onFilterInputSubmit,
 	filterInputs,
-	translate,
 }) {
 	return (
-		<Modal
-			opened={opened}
-			onClose={handleClose}
-			title={translate?.datatable.filters}
-		>
+		<Modal opened={opened} onClose={handleClose} title='Filters'>
 			<SimpleGrid cols={2}>
 				{React.Children.map(filterInputs, (child, index) => {
 					return React.cloneElement(child, {
@@ -371,9 +365,7 @@ function FilterModal({
 				})}
 			</SimpleGrid>
 			<Group justify='end' mt={15}>
-				<Button onClick={onFilterInputSubmit}>
-					{translate?.datatable.filter}
-				</Button>
+				<Button onClick={onFilterInputSubmit}>Filter</Button>
 			</Group>
 		</Modal>
 	);
@@ -389,10 +381,19 @@ CommonDataTable.DataTable = function ({
 	filterData,
 	setFilterData,
 	onFilterChange = (callback) => callback(filterData),
+	tabListValues = [
+		{
+			key: "default",
+			name: "Default",
+			icon: IconList,
+		},
+	],
+	onTabChange = (value) => {},
 	onStatusChange = (callback) => {},
-	translate,
 }) {
 	const [columnsFromProp, setColumnsFromProp] = useState([]);
+	const [tabValue, setTabValue] = useState(tabListValues[0].key);
+	const context = useContext(IContext);
 
 	useEffect(() => {
 		setColumnsFromProp(columns);
@@ -404,7 +405,7 @@ CommonDataTable.DataTable = function ({
 				setColumnsFromProp([
 					...colAction,
 					{
-						header: translate?.datatable["n0"],
+						header: "Nº",
 						field: "irow_index",
 					},
 
@@ -416,7 +417,7 @@ CommonDataTable.DataTable = function ({
 		} else if (showRowNumber) {
 			setColumnsFromProp([
 				{
-					header: translate?.datatable["n0"],
+					header: "Nº",
 					field: "irow_index",
 				},
 				...columns,
@@ -465,25 +466,23 @@ CommonDataTable.DataTable = function ({
 			</Table.Td>
 		);
 	};
-	const RenderRowData = () => {
-		const RenderTableData = ({ col, row, index }) => {
+	const RenderRowData = ({ tab }) => {
+		const TabldData = ({ col, row, index }) => {
 			const [status, setStatus] = useState(row[col.field]);
 			return (
-				<Table.Td ta={col.field === "irow_index" && "center"}>
+				<Table.Td key={v4()} ta={col.field === "irow_index" && "center"}>
 					{col.field === "irow_index" ? (
 						index + 1
 					) : col.type === "status" ? (
-						<>
-							<Switch
-								checked={status}
-								onChange={(event) => {
-									let updateStatus = event.currentTarget.checked;
-									setStatus(event.currentTarget.checked);
-									let newRow = { ...row, status: updateStatus };
-									onStatusChange(newRow);
-								}}
-							/>
-						</>
+						<Switch
+							checked={status}
+							onChange={(event) => {
+								let updateStatus = event.currentTarget.checked;
+								setStatus(event.currentTarget.checked);
+								let newRow = { ...row, status: updateStatus };
+								onStatusChange(newRow);
+							}}
+						/>
 					) : (
 						row[col.field]
 					)}
@@ -493,83 +492,134 @@ CommonDataTable.DataTable = function ({
 		return rows.map((row, index) => (
 			<Table.Tr key={v4()}>
 				{[
-					columnsFromProp.some((col) => col.type === "actions") && (
-						<RenderActionMenu key={v4()} row={row} />
-					),
+					<RenderActionMenu key={v4()} row={row} />,
 					columnsFromProp.map((col, colIndex) => {
 						return (
 							col.type !== "actions" &&
-							!filterData.values.hideColumn.includes(col.field) && (
-								<RenderTableData key={v4()} col={col} row={row} index={index} />
-							)
+							!filterData.values.hideColumn.includes(col.field) &&
+							(col.tab ? (
+								col.tab === tab && (
+									<TabldData index={index} row={row} col={col} key={v4()} />
+								)
+							) : (
+								<TabldData index={index} row={row} col={col} key={v4()} />
+							))
 						);
 					}),
 				]}
 			</Table.Tr>
 		));
 	};
-	const ITableScrollContainer = () => {
+	const TableCom = function ({ tab }) {
 		return (
-			<Table.ScrollContainer minWidth={390}>
-				<Table>
-					<Table.Thead>
-						<Table.Tr>
-							{/* {showRowNumber && <Table.Th w={30}>Nº</Table.Th>} */}
-							{columnsFromProp.map((col) => {
-								return (
-									!filterData.values.hideColumn.includes(col.field) && (
-										<Table.Th
-											key={v4()}
-											ta={
-												col.type === "actions" || col.field === "irow_index"
-													? "center"
-													: "left"
-											}
-										>
-											{col.header}
-										</Table.Th>
-									)
-								);
-							})}
-						</Table.Tr>
-					</Table.Thead>
-					<Table.Tbody>
-						<RenderRowData />
-					</Table.Tbody>
-				</Table>
-			</Table.ScrollContainer>
+			<Box>
+				{" "}
+				<Table.ScrollContainer minWidth={390}>
+					<Table>
+						<Table.Thead>
+							<Table.Tr>
+								{/* {showRowNumber && <Table.Th w={30}>Nº</Table.Th>} */}
+								{columnsFromProp.map((col) => {
+									return (
+										!filterData.values.hideColumn.includes(col.field) &&
+										(col.tab ? (
+											col.tab === tab && (
+												<Table.Th
+													key={v4()}
+													ta={
+														col.type === "actions" || col.field === "irow_index"
+															? "center"
+															: "left"
+													}
+												>
+													{col.header}
+												</Table.Th>
+											)
+										) : (
+											<Table.Th
+												key={v4()}
+												ta={
+													col.type === "actions" || col.field === "irow_index"
+														? "center"
+														: "left"
+												}
+											>
+												{col.header}
+											</Table.Th>
+										))
+									);
+								})}
+							</Table.Tr>
+						</Table.Thead>
+						<Table.Tbody>{<RenderRowData tab={tab} />}</Table.Tbody>
+					</Table>
+				</Table.ScrollContainer>
+				<Space h={"md"} />
+				<Grid>
+					<Grid.Col span={6}>
+						<Text fw={"bold"} c={"gray"}>
+							{currentPage} of {totalPages}
+						</Text>
+					</Grid.Col>
+					<Grid.Col span={6}>
+						<Group justify='end'>
+							<Pagination
+								total={totalPages}
+								boundaries={1}
+								siblings={1}
+								withEdges
+								onChange={(val) => {
+									let fd = {
+										...filterData,
+										values: { ...filterData.values, page: val },
+									};
+									setFilterData(fd);
+									onFilterChange(fd.values);
+								}}
+							/>
+						</Group>
+					</Grid.Col>
+				</Grid>
+			</Box>
 		);
 	};
 
 	return (
 		<Paper withBorder shadow='sm' p='md' radius={"md"} mt={16}>
-			<ITableScrollContainer />
-			<Space h={"md"} />
-			<Grid>
-				<Grid.Col span={6}>
-					<Text fw={"bold"} c={"gray"}>
-						{currentPage} {translate?.datatable.of} {totalPages}
-					</Text>
-				</Grid.Col>
-				<Grid.Col span={6}>
-					<Group justify='end'>
-						<Pagination
-							total={totalPages}
-							boundaries={1}
-							siblings={1}
-							withEdges
-							onChange={(val) => {
-								let fd = {
-									...filterData,
-									values: { ...filterData.values, page: val },
-								};
-								setFilterData(fd);
-								onFilterChange(fd.values);
-							}}
-						/>
-					</Group>
-				</Grid.Col>
-			</Grid>
+			{tabListValues.length > 0 ? (
+				<Tabs
+					variant='outline'
+					defaultValue={tabListValues[0].key}
+					onChange={(value) => {
+						setTabValue(value);
+						onTabChange(value);
+						context.setTab(value);
+					}}
+				>
+					<Tabs.List key={v4()}>
+						{tabListValues.map((value) => {
+							return (
+								<Tabs.Tab
+									key={v4()}
+									value={value.key}
+									leftSection={<value.icon size={13} />}
+								>
+									{value.name}
+								</Tabs.Tab>
+							);
+						})}
+					</Tabs.List>
+					{tabListValues.map((value) => {
+						return (
+							<Tabs.Panel key={v4()} value={value.key} py={"sm"}>
+								<TableCom tab={tabValue} />
+							</Tabs.Panel>
+						);
+					})}
+				</Tabs>
+			) : (
+				<TableCom />
+			)}
 		</Paper>
 	);
 };
@@ -580,14 +630,20 @@ function CommonDataTable({
 	rows,
 	currentPage = 1,
 	totalPage = 0,
-	translate,
 	onFilterChange = (callback) => callback(filterData),
+	tabListValues,
+	tab,
+	onTabChange = (value) => {},
+	slots,
 }) {
+	const context = useContext(IContext);
 	const [filterData, setFilterData] = useState({
 		rowsPerPage: [5, 10, 20],
 		sortBy: columns,
 		sortType: ["asc", "desc"],
-		hideColumns: columns.filter((item) => item.hideable),
+		hideColumns: columns.filter((item) =>
+			item.tab ? item.tab === context.tab && item.hideable : item.hideable
+		),
 		actionExports: [
 			{ icon: IconTableExport, text: "excel" },
 			{ icon: IconFileExport, text: "print" },
@@ -603,6 +659,16 @@ function CommonDataTable({
 	const handleSetFilterData = function (value) {
 		setFilterData(value);
 	};
+
+	useEffect(() => {
+		setFilterData((prev) => ({
+			...filterData,
+			hideColumns: columns.filter((item) =>
+				item.tab ? item.tab === context.tab && item.hideable : item.hideable
+			),
+		}));
+	}, [context]);
+
 	return React.Children.map(children, (child, index) => {
 		return React.cloneElement(child, {
 			columns: columns,
@@ -612,18 +678,19 @@ function CommonDataTable({
 			setFilterData: handleSetFilterData,
 			filterData: filterData,
 			onFilterChange: onFilterChange,
-			translate: translate,
+			onTabChange: onTabChange,
+			slots: slots,
 		});
 	});
 }
-
 CommonDataTable.Slot = function ({ slots }) {
 	return <Box mt={15}>{slots}</Box>;
 };
-export function ICommonDataTable({
+
+export function IDataTableWithTabs({
 	columns = [],
 	rows = [],
-	onFilterChange = (callback) => callback(filterData),
+	onFilterChange = (callback) => {},
 	onActionAdd,
 	onActionRefresh,
 	enableActionAdd = true,
@@ -637,47 +704,62 @@ export function ICommonDataTable({
 	totalPages = 0,
 	currentPage = 1,
 	onFilterInputSubmit,
+	tabListValues = [
+		{
+			key: "default",
+			name: "Default",
+			icon: IconList,
+		},
+	],
+	onTabChange = (value) => {},
 	slots = <></>,
 	onStatusChange = (callback) => {},
 }) {
-	// const lang = useGetLanguage();
-	const [translate] = useGetTranslate();
-
-	// const { user } = await getDictionary(lang);
-
+	const [tab, setTab] = useState("");
 	return (
-		<CommonDataTable
-			translate={translate}
-			columns={columns}
-			rows={rows}
-			onFilterChange={onFilterChange}
+		<IContext.Provider
+			value={{
+				tab: tab,
+				setTab: (value) => setTab(value),
+			}}
 		>
-			<CommonDataTable.Header
-				onActionAdd={onActionAdd}
-				onActionRefresh={onActionRefresh}
-				enableActionAdd={enableActionAdd}
-				title={title}
-			/>
-			<CommonDataTable.Filters
-				enableActionExport={enableActionExport}
-				enableFilters={enableFilters}
-				enableSearchInput={enableSearchInput}
-				onSearchInputChange={onSearchInputChange}
-				onActionExport={(exportType) => onActionExport(exportType)}
-				filterInputs={filterInputs}
-				onFilterInputSubmit={onFilterInputSubmit}
-			/>
-			<CommonDataTable.Slot slots={slots} />
-			<CommonDataTable.DataTable
-				totalPages={totalPages}
-				currentPage={currentPage}
-				onStatusChange={onStatusChange}
-			/>
-		</CommonDataTable>
+			<CommonDataTable
+				columns={columns}
+				rows={rows}
+				onFilterChange={onFilterChange}
+				tabListValues={tabListValues}
+				onTabChange={onTabChange}
+			>
+				<CommonDataTable.Header
+					onActionAdd={onActionAdd}
+					onActionRefresh={onActionRefresh}
+					enableActionAdd={enableActionAdd}
+					title={title}
+				/>
+				<CommonDataTable.Filters
+					enableActionExport={enableActionExport}
+					enableFilters={enableFilters}
+					enableSearchInput={enableSearchInput}
+					onSearchInputChange={onSearchInputChange}
+					onActionExport={(exportType) => onActionExport(exportType)}
+					filterInputs={filterInputs}
+					onFilterInputSubmit={onFilterInputSubmit}
+				/>
+
+				<CommonDataTable.Slot slots={slots} />
+
+				<CommonDataTable.DataTable
+					totalPages={totalPages}
+					currentPage={currentPage}
+					tabListValues={tabListValues}
+					onStatusChange={onStatusChange}
+				/>
+			</CommonDataTable>
+		</IContext.Provider>
 	);
 }
 
-ICommonDataTable.ActionsMenuItem = function ({
+IDataTableWithTabs.ActionsMenuItem = function ({
 	icon,
 	onActionClick = (e) => {},
 	label,
@@ -692,19 +774,11 @@ ICommonDataTable.ActionsMenuItem = function ({
 	);
 };
 
-ICommonDataTable.propTypes = {
+IDataTableWithTabs.propTypes = {
 	/**
 	 * Is this the principal call to action on the page?
 	 */
-	columns: PropTypes.arrayOf(
-		PropTypes.shape({
-			field: PropTypes.string,
-			header: PropTypes.string,
-			type: PropTypes.string,
-			getAction: PropTypes.func,
-			hideable: PropTypes.bool,
-		})
-	),
+	columns: PropTypes.array,
 	rows: PropTypes.array,
 	onFilterChange: PropTypes.func,
 	onActionAdd: PropTypes.func,
@@ -716,11 +790,13 @@ ICommonDataTable.propTypes = {
 	enableSearchInput: PropTypes.bool,
 	onSearchInputChange: PropTypes.func,
 	onActionExport: PropTypes.func,
-	filterInputs: PropTypes.arrayOf(PropTypes.element),
+	filterInputs: PropTypes.array,
 	totalPages: PropTypes.number,
 	currentPage: PropTypes.number,
 	onFilterInputSubmit: PropTypes.func,
 	slots: PropTypes.element,
 	onStatusChange: PropTypes.func,
 	showRowNumber: PropTypes.bool,
+	tabListValues: PropTypes.array,
+	onTabChange: PropTypes.func,
 };

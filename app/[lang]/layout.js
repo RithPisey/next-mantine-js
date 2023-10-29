@@ -10,6 +10,8 @@ import { AdminLayout } from "@/components/layout/AdminLayout";
 import MantineDefaultWrapper from "@/components/MantineDefaultWrapper";
 import { theme } from "@/config/themes";
 import MainLayout from "@/components/MainLayout";
+import { Language, lang } from "@/config/lang";
+import App from "@/components/App";
 
 export const metadata = {
 	title: "Next Mantine",
@@ -32,13 +34,7 @@ export default function RootLayout({ children, params }) {
 				/>
 			</head>
 			<body>
-				<MantineProvider theme={theme}>
-					<PagloadLoading>
-						<AbilityContextWrapper>
-							<MainLayout lang={params.lang}>{children}</MainLayout>
-						</AbilityContextWrapper>
-					</PagloadLoading>
-				</MantineProvider>
+				<App lang={params.lang}>{children}</App>
 			</body>
 		</html>
 	);
