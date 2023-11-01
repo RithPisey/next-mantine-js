@@ -2,6 +2,7 @@ import { field, roles } from "@/config/Abilities";
 import {
   IconLayoutDashboard,
   IconList,
+  IconUserCircle,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
@@ -21,6 +22,27 @@ export const paths = [
     isGroup: false,
     key: "dashboard",
     link: "/",
+  },
+  {
+    name: "user-page",
+    icon: IconUserCircle,
+    isGroup: false,
+    key: "user-page",
+    link: "/user-page",
+  },
+  {
+    name: "admin-page",
+    icon: IconUserCircle,
+    isGroup: false,
+    key: "admin-page",
+    link: "/admin-page",
+  },
+  {
+    name: "dev-page",
+    icon: IconUserCircle,
+    isGroup: false,
+    key: "admin-page",
+    link: "/dev-page",
   },
   {
     name: "admin",
