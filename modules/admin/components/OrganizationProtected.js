@@ -1,5 +1,5 @@
 "use client";
-import CheckPermissionWrapper from "@/components/CheckPermissionWrapper";
+import CheckPermissionWrapper from "@/components/Permission/CheckPermissionWrapper";
 import { field } from "@/config/Abilities";
 
 export default function AdminProtected({ children }) {

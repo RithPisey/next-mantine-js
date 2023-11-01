@@ -13,3 +13,8 @@ export const currentLocale = () => {
 	const local = useContext(Language);
 	return local;
 };
+
+export const useGetCurrentLocale = function () {
+	const locale = useContext(Language);
+	return [locale];
+};

@@ -5,7 +5,7 @@ import {
 	field as importField,
 	subject,
 } from "@/config/Abilities";
-import ProtectedPage from "./ProtectedPage";
+import ProtectedPage from "../ProtectedPage";
 export default function CheckPermissionWrapper({ children, field }) {
 	return (
 		<>
