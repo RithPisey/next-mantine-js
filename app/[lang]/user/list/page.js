@@ -1,3 +1,5 @@
-export default function UserList() {
+function UserList() {
 	return <p>List</p>;
 }
+
+export default UserList;
