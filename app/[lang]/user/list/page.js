@@ -1,5 +1,5 @@
 function UserList() {
-	return <p>List</p>;
+  return <UserList />;
 }
 
 export default UserList;

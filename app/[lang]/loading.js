@@ -1,7 +1,6 @@
 "use client";
 import CustomLoadingOverlay from "@/components/Loading/CustomLoadingOverlay";
 import PagloadLoading from "@/components/Loading/PagloadLoading";
-import MainLayout from "@/components/MainLayout";
 import {
 	LoadingOverlay,
 	Skeleton,
