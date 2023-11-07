@@ -7,7 +7,7 @@ export default function Authentication({ children }) {
 	const router = useRouter();
 	useEffect(() => {
 		console.log(auth);
-		if (!auth) {
+		if (!auth.auth) {
 			router.push("/login");
 		}
 	});

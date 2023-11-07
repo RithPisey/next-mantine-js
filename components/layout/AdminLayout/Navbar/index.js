@@ -23,6 +23,7 @@ import { useGetCurrentLocale } from "@/config/lang";
 const linkLeftBorderStyle = {
 	// borderLeft: "1px solid",
 	// borderLeftColor: "gainsboro",
+	borderRadius: "7px",
 };
 
 export function Navbar({ mobileOpend, desktopOpened, lang }) {
@@ -34,6 +35,7 @@ export function Navbar({ mobileOpend, desktopOpened, lang }) {
 				boxShadow: desktopOpened ? "-16px 30px 20px 1px black" : "none",
 			}}
 			withBorder={false}
+			w={280}
 		>
 			<AppShell.Section grow component={ScrollArea}>
 				<RenderNavigation lang={locale} paths={paths} />
@@ -84,7 +86,8 @@ const renderNavLinks = (navItems, lang, pathName, isGroup) => {
 				<NavLink
 					key={v4()}
 					style={linkLeftBorderStyle}
-					mb={10}
+					m={10}
+					w={"94%"}
 					leftSection={
 						<ActionIcon variant='light' color={isActive ? "secondary" : "gray"}>
 							{item?.icon ? (
@@ -104,6 +107,7 @@ const renderNavLinks = (navItems, lang, pathName, isGroup) => {
 		} else {
 			return (
 				<NavLink
+					w={"94%"}
 					key={v4()}
 					style={linkLeftBorderStyle}
 					leftSection={
@@ -118,7 +122,7 @@ const renderNavLinks = (navItems, lang, pathName, isGroup) => {
 							)}
 						</ActionIcon>
 					}
-					mb={10}
+					m={10}
 					label={item.name}
 					active={isActive}
 					color='secondary'

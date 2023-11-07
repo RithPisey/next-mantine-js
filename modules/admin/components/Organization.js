@@ -1,5 +1,5 @@
 "use client";
-import { ICommonDataTable } from "@/components/Features/ICommonDatatable/ICommonDatatable";
+import { IDatatable } from "@/components/Features/IDatatable/IDatatable";
 import { Box, Button, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -15,15 +15,15 @@ export default function OrganizationComponent({ module }) {
 			type: "actions",
 			getAction: (params) => {
 				return [
-					<ICommonDataTable.ActionsMenuItem
-						icon={<IconTrash />}
+					<IDatatable.ActionsMenuItem
+						icon={<IconTrash size={13} />}
 						label={"Delete"}
 						onActionClick={(params) => {
 							alert("delete");
 						}}
 					/>,
-					<ICommonDataTable.ActionsMenuItem
-						icon={<IconEdit />}
+					<IDatatable.ActionsMenuItem
+						icon={<IconEdit size={13} />}
 						label={"Edit"}
 						onActionClick={(params) => {
 							alert("edit");
@@ -60,7 +60,10 @@ export default function OrganizationComponent({ module }) {
 		{
 			field: "status",
 			header: "Status",
-			type: "status",
+			// type: "status",
+			renderCell: ({ value }) => {
+				return <p>{value}</p>;
+			},
 		},
 	];
 
@@ -72,7 +75,7 @@ export default function OrganizationComponent({ module }) {
 			phone: "123989121",
 			alt_phone: "012334556",
 			address: "home test",
-			status: false,
+			status: 1,
 		},
 		{
 			id: 2,
@@ -81,7 +84,7 @@ export default function OrganizationComponent({ module }) {
 			phone: "123989121",
 			alt_phone: "012334556",
 			address: "elephant test",
-			status: true,
+			status: 1,
 		},
 	];
 
@@ -102,7 +105,7 @@ export default function OrganizationComponent({ module }) {
 
 	return (
 		<Box>
-			<ICommonDataTable
+			<IDatatable
 				module={module}
 				columns={columns}
 				rows={rows}

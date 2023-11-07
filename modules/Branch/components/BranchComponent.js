@@ -1,5 +1,5 @@
 "use client";
-import { ICommonDataTable } from "@/components/Features/ICommonDatatable/ICommonDatatable";
+import { IDatatable } from "@/components/Features/IDatatable/IDatatable";
 import { Box, Button, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -14,14 +14,14 @@ export default function BranchComponent({ module }) {
 			type: "actions",
 			getAction: (params) => {
 				return [
-					<ICommonDataTable.ActionsMenuItem
+					<IDatatable.ActionsMenuItem
 						icon={<IconTrash />}
 						label={"Delete"}
 						onActionClick={(params) => {
 							alert("delete");
 						}}
 					/>,
-					<ICommonDataTable.ActionsMenuItem
+					<IDatatable.ActionsMenuItem
 						icon={<IconEdit />}
 						label={"Edit"}
 						onActionClick={(params) => {
@@ -101,7 +101,7 @@ export default function BranchComponent({ module }) {
 
 	return (
 		<Box>
-			<ICommonDataTable
+			<IDatatable
 				module={module}
 				columns={columns}
 				rows={rows}
@@ -140,6 +140,10 @@ export default function BranchComponent({ module }) {
 				totalPages={2}
 				onStatusChange={(row) => {
 					console.log(row);
+				}}
+				hasTab={true}
+				onTabChange={(value) => {
+					alert(value);
 				}}
 			/>
 		</Box>

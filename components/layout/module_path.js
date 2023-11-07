@@ -67,7 +67,7 @@ export const paths = [
 			{
 				name: "user-lists",
 				isGroup: false,
-				key: "user-lists",
+				key: "user_lists",
 				link: "/user/list",
 			},
 			{
@@ -86,7 +86,7 @@ export const paths = [
 			{
 				name: "modules",
 				isGroup: false,
-				key: "developer-modules",
+				key: "modules",
 				link: "/dev/modules",
 			},
 		],
