@@ -1,4 +1,4 @@
-import Branch from "@/modules/Branch/Branch";
+import Branch from "@/modules/branch/Branch";
 
 export default function BranchPage() {
 	return (

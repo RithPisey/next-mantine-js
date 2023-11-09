@@ -1,6 +1,8 @@
 import "@/assets/css/globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/dropzone/styles.css";
+import "cropperjs/dist/cropper.css";
 
 import { ColorSchemeScript } from "@mantine/core";
 import { i18n } from "@/i18n.config";

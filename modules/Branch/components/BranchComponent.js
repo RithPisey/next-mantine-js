@@ -1,10 +1,9 @@
 "use client";
 import { IDatatable } from "@/components/Features/IDatatable/IDatatable";
-import { Box, Button, TextInput } from "@mantine/core";
+import { Box, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconEdit, IconList, IconTrash } from "@tabler/icons-react";
-import { v4 } from "uuid";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 export default function BranchComponent({ module }) {
 	const columns = [

@@ -16,7 +16,7 @@ export default function CustomLoadingOverlay({ children }) {
 		>
 			{" "}
 			{children}
-			<Overlay zIndex={-2000} color='#000' backgroundOpacity={0.3} blur={7} />
+			<Overlay zIndex={-2000} color='#000' backgroundOpacity={0.3} blur={2} />
 		</Box>
 	);
 }

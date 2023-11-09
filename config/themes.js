@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input, Loader, createTheme, rem } from "@mantine/core";
+import { Button, Input, Loader, Select, createTheme, rem } from "@mantine/core";
 
 export const theme = createTheme({
 	scale: 0.9,
@@ -89,6 +89,11 @@ export const theme = createTheme({
 		Loader: Loader.extend({
 			defaultProps: {
 				loaders: { ...Loader.defaultLoaders },
+			},
+		}),
+		Select: Select.extend({
+			defaultProps: {
+				withCheckIcon: false,
 			},
 		}),
 	},

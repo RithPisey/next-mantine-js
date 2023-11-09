@@ -1,9 +1,9 @@
-import Organization from "@/modules/admin/Organization";
+import OrganizationComponent from "@/modules/organization/components/OrganizationComponent";
 
 export default function OrganizationPage({ params: { lang } }) {
 	return (
 		<>
-			<Organization lang={lang} />
+			<OrganizationComponent lang={lang} />
 		</>
 	);
 }

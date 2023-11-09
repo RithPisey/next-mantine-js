@@ -3,15 +3,17 @@ import { IDatatable } from "@/components/Features/IDatatable/IDatatable";
 import { Box, Button, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { v4 } from "uuid";
+import OrganizationActionModal from "./OrganizationActionModal";
 
 export default function OrganizationComponent({ module }) {
 	const columns = [
 		{
 			field: "actions",
-			header: "Actions",
+			header: "actions",
 			type: "actions",
 			getAction: (params) => {
 				return [
@@ -34,32 +36,32 @@ export default function OrganizationComponent({ module }) {
 		},
 		{
 			field: "name",
-			header: "Name",
+			header: "name",
 			hideable: false,
 		},
 		{
 			field: "latin_name",
-			header: "Latin Name",
+			header: "latin_name",
 			hideable: false,
 		},
 		{
 			field: "phone",
-			header: "Phone",
+			header: "phone",
 			hideable: true,
 		},
 		{
 			field: "alt_phone",
-			header: "Alternative Phone",
+			header: "alt_phone",
 			hideable: true,
 		},
 		{
 			field: "address",
-			header: "Address",
+			header: "address",
 			hideable: true,
 		},
 		{
 			field: "status",
-			header: "Status",
+			header: "status",
 			// type: "status",
 			renderCell: ({ value }) => {
 				return <p>{value}</p>;
@@ -87,21 +89,23 @@ export default function OrganizationComponent({ module }) {
 			status: 1,
 		},
 	];
-
-	const handleActionAdd = function () {
-		alert("add");
-	};
-
-	const handleActionRefresh = function () {
-		alert("refresh");
-	};
-
 	const filterInputs = useForm({
 		initialValues: {
 			name: "",
 			date: "",
 		},
 	});
+	const [
+		openedActionModal,
+		{ open: openActionModal, close: closeActionModal },
+	] = useDisclosure(false);
+	const handleActionAdd = function () {
+		openActionModal();
+	};
+
+	const handleActionRefresh = function () {
+		alert("refresh");
+	};
 
 	return (
 		<Box>
@@ -145,6 +149,10 @@ export default function OrganizationComponent({ module }) {
 				onStatusChange={(row) => {
 					console.log(row);
 				}}
+			/>
+			<OrganizationActionModal
+				open={openedActionModal}
+				close={closeActionModal}
 			/>
 		</Box>
 	);

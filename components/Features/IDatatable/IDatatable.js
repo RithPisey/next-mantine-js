@@ -61,11 +61,11 @@ CommonDataTable.Header = function ({
 							onClick={onActionRefresh}
 							leftSection={<IconRefresh />}
 						>
-							{translate?.datatable.refresh}
+							{translate("refresh")}
 						</Button>
 						{enableActionAdd && (
 							<Button onClick={onActionAdd} leftSection={<IconPlus />}>
-								{translate?.datatable.add}
+								{translate("add")}
 							</Button>
 						)}
 					</Group>
@@ -123,7 +123,7 @@ CommonDataTable.Filters = function ({
 
 	const sortByOptions = [
 		<Combobox.Option value={"reset"} key={Date.now() + "reset"}>
-			{translate?.datatable.reset}
+			{translate("reset")}
 		</Combobox.Option>,
 		...filterData.sortBy.map(
 			(item) =>
@@ -137,7 +137,7 @@ CommonDataTable.Filters = function ({
 
 	const sortTypeOptions = filterData.sortType.map((item) => (
 		<Combobox.Option value={item} key={Date.now() + item}>
-			{translate?.datatable[item]}
+			{translate(item)}
 		</Combobox.Option>
 	));
 	const isEyeoff = filterData.hideColumns.some((col) => {
@@ -163,7 +163,7 @@ CommonDataTable.Filters = function ({
 			key={Date.now() + item.text}
 		>
 			<Group>
-				<item.icon size={14} /> {translate?.datatable[item.text]}
+				<item.icon size={14} /> {translate(item.text)}
 			</Group>
 		</Combobox.Option>
 	));
@@ -226,7 +226,7 @@ CommonDataTable.Filters = function ({
 									rightSection={<IconSelector size={16} />}
 									onClick={() => sortByCB.toggleDropdown()}
 								>
-									{translate?.datatable.sortby} {filterData.values.sortBy}
+									{translate("sortby")} {filterData.values.sortBy}
 								</Button>
 							</Combobox.Target>
 							<Combobox.Dropdown>
@@ -334,7 +334,7 @@ CommonDataTable.Filters = function ({
 										rightSection={<IconUpload size={16} />}
 										onClick={() => actionExportCB.toggleDropdown()}
 									>
-										{translate?.datatable.export}
+										{translate("export")}
 									</Button>
 								</Combobox.Target>
 								<Combobox.Dropdown>
@@ -345,7 +345,7 @@ CommonDataTable.Filters = function ({
 
 						{enableSearchInput && (
 							<Input
-								placeholder={translate?.datatable.search}
+								placeholder={translate("search")}
 								leftSection={<IconSearch size={"16"} />}
 								onChange={(e) => onSearchInputChange(e.target.value)}
 							/>
@@ -379,11 +379,7 @@ function FilterModal({
 	translate,
 }) {
 	return (
-		<Modal
-			opened={opened}
-			onClose={handleClose}
-			title={translate?.datatable.filters}
-		>
+		<Modal opened={opened} onClose={handleClose} title={translate("filters")}>
 			<SimpleGrid cols={2}>
 				{React.Children.map(filterInputs, (child, index) => {
 					return React.cloneElement(child, {
@@ -392,9 +388,7 @@ function FilterModal({
 				})}
 			</SimpleGrid>
 			<Group justify='end' mt={15}>
-				<Button onClick={onFilterInputSubmit}>
-					{translate?.datatable.filter}
-				</Button>
+				<Button onClick={onFilterInputSubmit}>{translate("filter")}</Button>
 			</Group>
 		</Modal>
 	);
@@ -425,7 +419,7 @@ CommonDataTable.DataTable = function ({
 				setColumnsFromProp([
 					...colAction,
 					{
-						header: translate?.datatable["n0"],
+						header: translate("n0"),
 						field: "irow_index",
 					},
 
@@ -437,7 +431,7 @@ CommonDataTable.DataTable = function ({
 		} else if (showRowNumber) {
 			setColumnsFromProp([
 				{
-					header: translate?.datatable["n0"],
+					header: translate("n0"),
 					field: "irow_index",
 				},
 				...columns,
@@ -537,7 +531,7 @@ CommonDataTable.DataTable = function ({
 													: "left"
 											}
 										>
-											{col.header}
+											{translate(col.header)}
 										</Table.Th>
 									)
 								);
@@ -559,7 +553,7 @@ CommonDataTable.DataTable = function ({
 			<Grid>
 				<Grid.Col span={6}>
 					<Text fw={"bold"} c={"gray"}>
-						{currentPage} {translate?.datatable.of} {totalPages}
+						{currentPage} {translate("of")} {totalPages}
 					</Text>
 				</Grid.Col>
 				<Grid.Col span={6}>
@@ -620,7 +614,7 @@ CommonDataTable.DataTableWithTab = function ({
 				setColumnsFromProp([
 					...colAction,
 					{
-						header: translate?.datatable["n0"],
+						header: translate("n0"),
 						field: "irow_index",
 					},
 
@@ -632,7 +626,7 @@ CommonDataTable.DataTableWithTab = function ({
 		} else if (showRowNumber) {
 			setColumnsFromProp([
 				{
-					header: translate?.datatable["n0"],
+					header: translate("n0"),
 					field: "irow_index",
 				},
 				...columns,
@@ -739,7 +733,7 @@ CommonDataTable.DataTableWithTab = function ({
 															: "left"
 													}
 												>
-													{col.header}
+													{translate(col.header)}
 												</Table.Th>
 											)
 										) : (
@@ -751,7 +745,7 @@ CommonDataTable.DataTableWithTab = function ({
 														: "left"
 												}
 											>
-												{col.header}
+												{translate(col.header)}
 											</Table.Th>
 										))
 									);
@@ -765,7 +759,7 @@ CommonDataTable.DataTableWithTab = function ({
 				<Grid>
 					<Grid.Col span={6}>
 						<Text fw={"bold"} c={"gray"}>
-							{currentPage} {translate?.datatable.of} {totalPages}
+							{currentPage} {translate("of")} {totalPages}
 						</Text>
 					</Grid.Col>
 					<Grid.Col span={6}>

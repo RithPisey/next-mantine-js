@@ -4,6 +4,7 @@ import { Box, LoadingOverlay, Stack, useMantineTheme } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { ClockLoader, PropagateLoader, PulseLoader } from "react-spinners";
 import CustomLoadingOverlay from "./CustomLoadingOverlay";
+import { NavigationProgress, nprogress } from "@mantine/nprogress";
 
 export default function PagloadLoading({ children }) {
 	const [isLoad, setIsLoad] = useState(true);
