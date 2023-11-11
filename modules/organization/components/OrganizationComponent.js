@@ -5,7 +5,7 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import React from "react";
+import React, { useState } from "react";
 import { v4 } from "uuid";
 import OrganizationActionModal from "./OrganizationActionModal";
 
@@ -60,6 +60,12 @@ export default function OrganizationComponent({ module }) {
 			hideable: true,
 		},
 		{
+			field: "created_at",
+			header: "created_at",
+			hideable: true,
+			defaultSortby: true,
+		},
+		{
 			field: "status",
 			header: "status",
 			// type: "status",
@@ -68,7 +74,19 @@ export default function OrganizationComponent({ module }) {
 			},
 		},
 	];
-
+	const [pagination, setPagination] = useState({
+		page: "",
+		sortBy: "",
+		sortType: "",
+		rowPerPage: "",
+	});
+	const filterInputs = useForm({
+		initialValues: {
+			search: "",
+			name: "",
+			date: "",
+		},
+	});
 	const rows = [
 		{
 			id: 1,
@@ -89,12 +107,7 @@ export default function OrganizationComponent({ module }) {
 			status: 1,
 		},
 	];
-	const filterInputs = useForm({
-		initialValues: {
-			name: "",
-			date: "",
-		},
-	});
+
 	const [
 		openedActionModal,
 		{ open: openActionModal, close: closeActionModal },
@@ -113,8 +126,14 @@ export default function OrganizationComponent({ module }) {
 				module={module}
 				columns={columns}
 				rows={rows}
-				onFilterChange={(filters) => {
-					console.log(filters);
+				onFilterChange={(filter) => {
+					setPagination((prev) => ({
+						...prev,
+						page: filter.page,
+						rowPerPage: filter.rowPerPage,
+						sortBy: filter.sortBy,
+						sortType: filter.sortType,
+					}));
 				}}
 				onActionAdd={handleActionAdd}
 				onActionRefresh={handleActionRefresh}
@@ -124,7 +143,7 @@ export default function OrganizationComponent({ module }) {
 				enableFilters={true}
 				enableSearchInput={true}
 				onSearchInputChange={(text) => {
-					console.log(text);
+					filterInputs.setFieldValue("search", text);
 				}}
 				onActionExport={(exportType) => {
 					console.log(exportType);
@@ -145,11 +164,19 @@ export default function OrganizationComponent({ module }) {
 						placeholder='Name'
 					/>,
 				]}
-				totalPages={2}
+				currentPage={1}
+				totalPages={10}
 				onStatusChange={(row) => {
 					console.log(row);
 				}}
 			/>
+			<button
+				onClick={() => {
+					console.log({ pagination: pagination, filters: filterInputs.values });
+				}}
+			>
+				TEST
+			</button>
 			<OrganizationActionModal
 				open={openedActionModal}
 				close={closeActionModal}

@@ -10,7 +10,7 @@ export default function Authentication({ children }) {
 		if (!auth.auth) {
 			// router.push("/login");
 		}
-	});
+	}, []);
 
 	return children;
 }
