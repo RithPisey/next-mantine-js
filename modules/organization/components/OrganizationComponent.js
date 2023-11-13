@@ -80,9 +80,9 @@ export default function OrganizationComponent({ module }) {
 		sortType: "",
 		rowPerPage: "",
 	});
+	const [search, setSearch] = useState("");
 	const filterInputs = useForm({
 		initialValues: {
-			search: "",
 			name: "",
 			date: "",
 		},
@@ -143,7 +143,7 @@ export default function OrganizationComponent({ module }) {
 				enableFilters={true}
 				enableSearchInput={true}
 				onSearchInputChange={(text) => {
-					filterInputs.setFieldValue("search", text);
+					setSearch(text);
 				}}
 				onActionExport={(exportType) => {
 					console.log(exportType);
