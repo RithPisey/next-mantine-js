@@ -1,5 +1,7 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
+import useNotification from "@/hooks/notifications/useNotification";
+import useIdentity from "@/hooks/service/identity/useIdentity";
 import {
 	Avatar,
 	Box,
@@ -21,6 +23,10 @@ function LoginPage() {
 		password: yup.string().required().min(8).max(16),
 	});
 
+	//custom hook
+	const { NSuccess, NError, NWarning } = useNotification();
+	const [user, signIn, isLoading, error] = useIdentity();
+
 	const [auth] = useAuth();
 	const router = useRouter();
 
@@ -32,6 +38,18 @@ function LoginPage() {
 		validateInputOnBlur: true,
 		validate: yupResolver(schema),
 	});
+
+	const handleLogin = function (values) {
+		// auth.setAuthentication(values);
+		// router.push("/");
+		// console.log(values);
+		// const  = onLogin();
+		// onLogin();
+		// console.log(result);
+		// NWarning("success");
+		signIn(values.email, values.password);
+		// console.log(user);
+	};
 
 	return (
 		<Center h={"100vh"} w={"100vw"}>
@@ -58,11 +76,7 @@ function LoginPage() {
 								placeholder='Password'
 							/>
 							<Button
-								onClick={formLogin.onSubmit((values) => {
-									console.log(auth);
-									auth.setAuthentication(values);
-									router.push("/");
-								})}
+								onClick={formLogin.onSubmit(handleLogin)}
 								mt={"md"}
 								size='md'
 							>

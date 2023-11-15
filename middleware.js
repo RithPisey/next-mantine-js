@@ -17,32 +17,45 @@ function getLocale(request) {
 export function middleware(request) {
 	const locale = request.nextUrl.pathname.substring(1, 3);
 	const pathname = request.nextUrl.pathname;
-	const pathnameIsMissingLocale = i18n.locales.every(
-		(locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-	);
 
-	// Redirect if there is no locale
-	const myRegex = /^\/.{2}$/;
+	if (i18n.locales.some((l) => l === locale)) {
+		const pathnameIsMissingLocale = i18n.locales.every(
+			(locale) =>
+				!pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+		);
 
-	if (pathnameIsMissingLocale) {
-		if (locale) {
+		// Redirect if there is no locale
+		const myRegex = /^\/.{2}$/;
+
+		if (pathnameIsMissingLocale) {
+			if (locale) {
+				return NextResponse.redirect(
+					new URL(
+						`/${locale}${pathname === "/" ? "/dashboard" : pathname}`,
+						request.url
+					)
+				);
+			} else {
+				return NextResponse.redirect(
+					new URL(
+						`/${i18n.defaultLocale}${
+							pathname === "/" ? "/dashboard" : pathname
+						}`,
+						request.url
+					)
+				);
+			}
+		} else if (myRegex.test(pathname)) {
 			return NextResponse.redirect(
-				new URL(
-					`/${locale}${pathname === "/" ? "/dashboard" : pathname}`,
-					request.url
-				)
-			);
-		} else {
-			return NextResponse.redirect(
-				new URL(
-					`/${i18n.defaultLocale}${pathname === "/" ? "/dashboard" : pathname}`,
-					request.url
-				)
+				new URL(`/${locale}${"/dashboard"}`, request.url)
 			);
 		}
-	} else if (myRegex.test(pathname)) {
+	} else {
 		return NextResponse.redirect(
-			new URL(`/${locale}${"/dashboard"}`, request.url)
+			new URL(
+				`/${i18n.defaultLocale}${pathname === "/" ? "/dashboard" : pathname}`,
+				request.url
+			)
 		);
 	}
 }
